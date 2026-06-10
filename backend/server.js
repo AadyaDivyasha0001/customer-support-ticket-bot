@@ -1,11 +1,12 @@
 const aiRoutes =
   require("./routes/aiRoutes");
+
 const rateLimit =
-  require(
-    "express-rate-limit"
-  );
+  require("express-rate-limit");
+
 const authRoutes =
   require("./routes/authRoutes");
+
 const express =
   require("express");
 
@@ -26,14 +27,18 @@ require("dotenv").config();
 const ticketRoutes =
   require("./routes/ticketRoutes");
 
+const customerRoutes =
+  require("./routes/customerRoutes");
+
+const agentRoutes =
+  require("./routes/agentRoutes");
+
 const app = express();
+
 const searchLimiter =
   rateLimit({
-    windowMs:
-      60 * 1000,
-
+    windowMs: 60 * 1000,
     max: 35,
-
     message:
       "Too many requests. Please try again later.",
   });
@@ -63,8 +68,18 @@ app.set("io", io);
 app.use(cors());
 app.use(express.json());
 
+let notifications = [];
+
 // Routes
-// Routes
+app.use(
+  "/api/agents",
+  agentRoutes
+);
+
+app.use(
+  "/api/customers",
+  customerRoutes
+);
 
 app.use(
   "/tickets",
@@ -76,9 +91,22 @@ app.use(
   "/auth",
   authRoutes
 );
+
 app.use(
   "/ai",
   aiRoutes
+);
+app.use(
+  "/api/customers",
+  customerRoutes
+);
+
+// Notifications API
+app.get(
+  "/notifications",
+  (req, res) => {
+    res.json(notifications);
+  }
 );
 // MongoDB Connection
 mongoose

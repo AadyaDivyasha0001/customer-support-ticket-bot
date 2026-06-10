@@ -24,31 +24,55 @@ const ticketSchema =
         default: "Medium",
       },
 
+      category: {
+        type: String,
+        default: "General Support",
+      },
+
+      aiSummary: {
+        type: String,
+        default: "",
+      },
+
+      aiSuggestedReply: {
+        type: String,
+        default: "",
+      },
+      aiConfidence: {
+  type: String,
+  default: "",
+},
+ department: {
+  type: String,
+  default: "Support",
+},
+
+customerSentiment: {
+  type: String,
+  default: "Neutral",
+},
+
       status: {
         type: String,
         default: "Open",
       },
+      
 
-      // ASSIGNED SUPPORT AGENT
       assignedAgent: {
-        name: {
-          type: String,
-          default:
-            "Unassigned",
-        },
-
-        department: {
-          type: String,
-          default:
-            "Support",
-        },
-
-        email: {
-          type: String,
-          default:
-            "supportdesk@email.com",
-        },
+        type:
+          mongoose.Schema.Types.ObjectId,
+        ref: "Agent",
+        default: null,
       },
+
+      slaDeadline: {
+  type: Date,
+},
+
+isEscalated: {
+  type: Boolean,
+  default: false,
+},
 
       // ACTIVITY TIMELINE
       activityLogs: [
