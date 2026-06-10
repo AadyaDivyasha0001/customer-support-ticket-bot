@@ -99,7 +99,10 @@ function App() {
 
         <div className="main-section">
 
-          <Header />
+          <Header
+  activePage={activePage}
+  setActivePage={setActivePage}
+/>
 
           <div className="page-content">
             {renderPage()}

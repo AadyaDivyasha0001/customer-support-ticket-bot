@@ -99,6 +99,7 @@ const Tickets = () => {
 
         toast.success(
           `🎫 New Ticket: ${newTicket.customerName}`
+          
         );
       }
     );
@@ -252,17 +253,15 @@ const Tickets = () => {
           status:
             "Open",
         });
-      } catch (
-        error
-      ) {
-        console.log(
-          error
-        );
+      } catch (error) {
 
-        toast.error(
-          "Failed to create ticket"
-        );
-      }
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Failed to create ticket"
+  );
+}
     };
 
   const updateStatus =
@@ -352,40 +351,36 @@ const Tickets = () => {
 
   // FILTERS
   const filteredTickets =
-    tickets.filter(
-      (ticket) => {
-        const matchesSearch =
-          ticket.customerName
-  .toLowerCase()
-  .includes(
-    debouncedSearch.toLowerCase()
-  ) ||
-ticket.issue
-  .toLowerCase()
-  .includes(
-    debouncedSearch.toLowerCase()
+  tickets.filter(
+    (ticket) => {
+      const matchesSearch =
+        (ticket.customerName || "")
+          .toLowerCase()
+          .includes(
+            debouncedSearch.toLowerCase()
+          ) ||
+
+        (ticket.issue || "")
+          .toLowerCase()
+          .includes(
+            debouncedSearch.toLowerCase()
+          );
+
+      const matchesStatus =
+        statusFilter === "All" ||
+        ticket.status === statusFilter;
+
+      const matchesPriority =
+        priorityFilter === "All" ||
+        ticket.priority === priorityFilter;
+
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesPriority
+      );
+    }
   );
-
-        const matchesStatus =
-          statusFilter ===
-            "All" ||
-          ticket.status ===
-            statusFilter;
-
-        const matchesPriority =
-          priorityFilter ===
-            "All" ||
-          ticket.priority ===
-            priorityFilter;
-
-        return (
-          matchesSearch &&
-          matchesStatus &&
-          matchesPriority
-        );
-      }
-    );
-
   // ANALYTICS
   const totalTickets =
     tickets.length;
@@ -431,175 +426,97 @@ ticket.issue
             "20px",
         }}
       >
-        <h1
-          style={{
-            color:
-              "#0d47a1",
-          }}
-        >
-          Tickets
-        </h1>
+        <div className="tickets-header">
+  <div>
+    <span className="page-label">
+      SUPPORT OPERATIONS
+    </span>
 
-        <button
-          onClick={() =>
-            setShowModal(
-              true
-            )
-          }
-          style={{
-            background:
-              "#1976d2",
-            color:
-              "white",
-            border:
-              "none",
-            padding:
-              "12px 20px",
-            borderRadius:
-              "10px",
-            cursor:
-              "pointer",
-          }}
-        >
-          + Create Ticket
-        </button>
-      </div>
+    <h1>Tickets Management</h1>
+
+    <p>
+      Monitor, manage and resolve customer support requests.
+    </p>
+  </div>
+
+  <button
+    onClick={() => setShowModal(true)}
+    className="create-ticket-btn"
+  >
+    + Create Ticket
+  </button>
+</div>
+</div>
+       
+
+        
 
       {/* ANALYTICS */}
-      <div
-        style={{
-          display:
-            "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(180px,1fr))",
-          gap:
-            "15px",
-          marginBottom:
-            "20px",
-        }}
-      >
-        {[
-          [
-            "Total",
-            totalTickets,
-          ],
-          [
-            "Open",
-            openTickets,
-          ],
-          [
-            "Resolved",
-            resolvedTickets,
-          ],
-          [
-            "High Priority",
-            highPriorityTickets,
-          ],
-        ].map(
-          (
-            item,
-            index
-          ) => (
-            <div
-              key={index}
-              style={{
-                background:
-                  "white",
-                padding:
-                  "20px",
-                borderRadius:
-                  "15px",
-              }}
-            >
-              <h4>
-                {item[0]}
-              </h4>
+      <div className="tickets-stats-grid">
 
-              <h2>
-                {item[1]}
-              </h2>
-            </div>
-          )
-        )}
-      </div>
+  <div className="ticket-stat-card">
+    <h4>Total Tickets</h4>
+    <h2>{totalTickets}</h2>
+  </div>
+
+  <div className="ticket-stat-card open">
+    <h4>Open Tickets</h4>
+    <h2>{openTickets}</h2>
+  </div>
+
+  <div className="ticket-stat-card resolved">
+    <h4>Resolved</h4>
+    <h2>{resolvedTickets}</h2>
+  </div>
+
+  <div className="ticket-stat-card high">
+    <h4>High Priority</h4>
+    <h2>{highPriorityTickets}</h2>
+  </div>
+
+</div>
 
       {/* SEARCH FILTER */}
-      <div
-        style={{
-          display:
-            "flex",
-          gap: "10px",
-          marginBottom:
-            "20px",
-          flexWrap:
-            "wrap",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Search customer or issue..."
-          value={
-            searchTerm
-          }
-          onChange={(e) =>
-            setSearchTerm(
-              e.target.value
-            )
-          }
-        />
+      <div className="tickets-toolbar">
 
-        <select
-          value={
-            statusFilter
-          }
-          onChange={(e) =>
-            setStatusFilter(
-              e.target.value
-            )
-          }
-        >
-          <option>
-            All
-          </option>
-          <option>
-            Open
-          </option>
-          <option>
-            In Progress
-          </option>
-          <option>
-            Resolved
-          </option>
-          <option>
-            Closed
-          </option>
-        </select>
+  <input
+    type="text"
+    placeholder="Search customer or issue..."
+    value={searchTerm}
+    onChange={(e) =>
+      setSearchTerm(e.target.value)
+    }
+    className="search-input"
+  />
 
-        <select
-          value={
-            priorityFilter
-          }
-          onChange={(e) =>
-            setPriorityFilter(
-              e.target.value
-            )
-          }
-        >
-          <option>
-            All
-          </option>
-          <option>
-            High
-          </option>
-          <option>
-            Medium
-          </option>
-          <option>
-            Low
-          </option>
-        </select>
-      </div>
+  <select
+    value={statusFilter}
+    onChange={(e) =>
+      setStatusFilter(e.target.value)
+    }
+    className="filter-select"
+  >
+    <option>All</option>
+    <option>Open</option>
+    <option>In Progress</option>
+    <option>Resolved</option>
+    <option>Closed</option>
+  </select>
 
+  <select
+    value={priorityFilter}
+    onChange={(e) =>
+      setPriorityFilter(e.target.value)
+    }
+    className="filter-select"
+  >
+    <option>All</option>
+    <option>High</option>
+    <option>Medium</option>
+    <option>Low</option>
+  </select>
+
+</div>
       {/* TICKETS */}
       <div
         style={{
@@ -616,97 +533,63 @@ ticket.issue
             ticket
           ) => (
             <div
-              key={
-                ticket._id
-              }
-              onClick={() =>
-                setSelectedTicket(
-                  ticket
-                )
-              }
-              style={{
-                background:
-                  "white",
-                padding:
-                  "20px",
-                borderRadius:
-                  "18px",
-                cursor:
-                  "pointer",
-              }}
-            >
-              <h2>
-                {
-                  ticket.customerName
-                }
-              </h2>
+  key={ticket._id}
+  className="modern-ticket-card"
+  onClick={() =>
+    setSelectedTicket(ticket)
+  }
+>
+  <div className="ticket-top">
 
-              <p>
-                <strong>
-                  Email:
-                </strong>{" "}
-                {
-                  ticket.email
-                }
-              </p>
+    <h2>
+      {ticket.customerName}
+    </h2>
 
-              <p>
-                <strong>
-                  Issue:
-                </strong>{" "}
-                {
-                  ticket.issue
-                }
-              </p>
+    <span
+      className={`priority-badge ${ticket.priority.toLowerCase()}`}
+    >
+      {ticket.priority}
+    </span>
 
-              <p>
-                <strong>
-                  Priority:
-                </strong>{" "}
-                {
-                  ticket.priority
-                }
-              </p>
+  </div>
 
-              <div>
-                <strong>
-                  Status:
-                </strong>
+  <p className="ticket-email">
+    {ticket.email}
+  </p>
 
-                <select
-                  value={
-                    ticket.status
-                  }
-                  onClick={(
-                    e
-                  ) =>
-                    e.stopPropagation()
-                  }
-                  onChange={(
-                    e
-                  ) =>
-                    updateStatus(
-                      ticket._id,
-                      e.target
-                        .value
-                    )
-                  }
-                >
-                  <option>
-                    Open
-                  </option>
-                  <option>
-                    In Progress
-                  </option>
-                  <option>
-                    Resolved
-                  </option>
-                  <option>
-                    Closed
-                  </option>
-                </select>
-              </div>
-            </div>
+  <div className="ticket-issue">
+    {ticket.issue}
+  </div>
+
+  <div className="ticket-footer">
+
+    <select
+      value={ticket.status}
+      onClick={(e) =>
+        e.stopPropagation()
+      }
+      onChange={(e) =>
+        updateStatus(
+          ticket._id,
+          e.target.value
+        )
+      }
+    >
+      <option>Open</option>
+      <option>In Progress</option>
+      <option>Resolved</option>
+      <option>Closed</option>
+    </select>
+
+    <button
+      className="view-ticket-btn"
+    >
+      View Details
+    </button>
+
+  </div>
+</div>
+            
           )
         )}
       </div>
@@ -785,7 +668,7 @@ ticket.issue
       )}
 
       {/* DETAILS MODAL */}
-      {selectedTicket && (
+      {selectedTicket ? ( 
         <div
           onClick={() =>
             setSelectedTicket(
@@ -818,7 +701,8 @@ ticket.issue
                 Customer:
               </strong>{" "}
               {
-                selectedTicket.customerName
+                  selectedTicket?.customerName ||
+    "N/A"
               }
             </p>
 
@@ -827,8 +711,11 @@ ticket.issue
                 Issue:
               </strong>{" "}
               {
-                selectedTicket.issue
-              }
+                
+          selectedTicket?.issue ||
+           "N/A"
+}
+              
             </p>
 
             <p>
@@ -836,9 +723,13 @@ ticket.issue
                 Status:
               </strong>{" "}
               {
-                selectedTicket.status
+                selectedTicket.status || "Unknown"
               }
             </p>
+            <p>
+  <strong>Sentiment:</strong>{" "}
+  {selectedTicket?.customerSentiment || "Neutral"}
+</p>
 
             <hr />
 
@@ -863,7 +754,7 @@ ticket.issue
               </strong>{" "}
               {selectedTicket
                 ?.assignedAgent
-                ?.department}
+                ?.department || "N/A"}
             </p>
 
             <p>
@@ -872,7 +763,8 @@ ticket.issue
               </strong>{" "}
               {selectedTicket
                 ?.assignedAgent
-                ?.email}
+                ?.email || "N/A"
+        }
             </p>
 
             <hr />
@@ -905,9 +797,11 @@ ticket.issue
                     <br />
 
                     <small>
-                      {new Date(
-                        log.timestamp
-                      ).toLocaleString()}
+                      {log?.timestamp
+  ? new Date(
+      log.timestamp
+    ).toLocaleString()
+  : "Unknown Time"}
                     </small>
                   </div>
                 )
@@ -962,16 +856,18 @@ ticket.issue
 
             <div>
               {
-                conversation.message
+                conversation.message ||"Empty Message"
               }
             </div>
 
             <div
               className="message-time"
             >
-              {new Date(
-                conversation.timestamp
-              ).toLocaleTimeString()}
+              {conversation?.timestamp
+  ? new Date(
+      conversation.timestamp
+    ).toLocaleTimeString()
+  : "--:--" }
             </div>
 
           </div>
@@ -1027,6 +923,10 @@ ticket.issue
 
           </div>
         </div>
+            ) : (
+        <p>
+          Ticket data unavailable
+        </p>
       )}
     </div>
   );

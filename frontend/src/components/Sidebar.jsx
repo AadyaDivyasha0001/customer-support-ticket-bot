@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   FaTachometerAlt,
   FaTicketAlt,
@@ -9,7 +10,10 @@ import {
   FaPlus,
 } from "react-icons/fa";
 
+
 function Sidebar({ activePage, setActivePage }) {
+  const [showContactModal, setShowContactModal] =
+  useState(false);
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.reload();
@@ -127,8 +131,46 @@ function Sidebar({ activePage, setActivePage }) {
           assistance.
         </p>
 
-        <button className="contact-btn">Contact Agent</button>
+        <button
+  className="contact-btn"
+  onClick={() =>
+    setShowContactModal(true)
+  }
+>
+  Contact Agent
+</button>
       </div>
+      {showContactModal && (
+  <div className="contact-popup">
+    <div className="contact-popup-header">
+      <h3>Support Lead</h3>
+
+      <button
+        className="close-popup-btn"
+        onClick={() =>
+          setShowContactModal(false)
+        }
+      >
+        ✕
+      </button>
+    </div>
+
+    <div className="contact-popup-body">
+      <p><strong>👤 Name:</strong> Rahul Verma</p>
+
+      <p><strong>🧑‍💼 Role:</strong> Senior Support Agent</p>
+
+      <p><strong>📧 Email:</strong> rahul@supportdesk.com</p>
+
+      <p><strong>📞 Phone:</strong> +91 9876543210</p>
+
+      <p><strong>🏢 Department:</strong> Technical Support</p>
+
+      <p><strong>🟢 Status:</strong> Online</p>
+    </div>
+  </div>
+)}
+      
 
       {/* Logout */}
       <div className="logout" onClick={handleLogout}>

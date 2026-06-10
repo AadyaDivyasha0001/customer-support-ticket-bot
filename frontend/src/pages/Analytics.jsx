@@ -1,3 +1,5 @@
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import {
@@ -74,7 +76,71 @@ const Analytics = () => {
 
   const COLORS = ["#2563eb", "#16a34a", "#64748b"];
   const PRIORITY_COLORS = ["#dc2626", "#f97316", "#16a34a"];
+const downloadCSV = () => {
+  const csvData = [
+    ["Metric", "Value"],
+    ["Total Tickets", totalTickets],
+    ["Open Tickets", openTickets],
+    ["Resolved Tickets", resolvedTickets],
+    ["Closed Tickets", closedTickets],
+    ["High Priority", highPriority],
+    ["Medium Priority", mediumPriority],
+    ["Low Priority", lowPriority],
+    ["Resolution Rate", `${resolutionRate}%`],
+  ];
 
+  const csvContent = csvData
+    .map((row) => row.join(","))
+    .join("\n");
+
+  const blob = new Blob(
+    [csvContent],
+    {
+      type: "text/csv;charset=utf-8;",
+    }
+  );
+
+  const link =
+    document.createElement("a");
+
+  link.href =
+    URL.createObjectURL(blob);
+
+  link.download =
+    "analytics-report.csv";
+
+  link.click();
+};
+
+const generateReport = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text(
+    "Support Analytics Report",
+    14,
+    20
+  );
+
+  autoTable(doc, {
+    startY: 30,
+    head: [["Metric", "Value"]],
+    body: [
+      ["Total Tickets", totalTickets],
+      ["Open Tickets", openTickets],
+      ["Resolved Tickets", resolvedTickets],
+      ["Closed Tickets", closedTickets],
+      ["High Priority", highPriority],
+      ["Medium Priority", mediumPriority],
+      ["Low Priority", lowPriority],
+      ["Resolution Rate", `${resolutionRate}%`],
+    ],
+  });
+
+  doc.save(
+    "support-analytics-report.pdf"
+  );
+};
   return (
     <div className="analytics-page page-shell">
       <div className="page-header">
@@ -86,12 +152,23 @@ const Analytics = () => {
             and operational health.
           </p>
         </div>
+        </div>
 
         <div className="page-actions">
-          <button className="btn">Download CSV</button>
-          <button className="btn btn-primary">Generate Report</button>
-        </div>
-      </div>
+  <button
+    className="btn"
+    onClick={downloadCSV}
+  >
+    Download CSV
+  </button>
+
+  <button
+    className="btn btn-primary"
+    onClick={generateReport}
+  >
+    Generate Report
+  </button>
+</div>
 
       <div className="analytics-kpi-grid">
         <div className="analytics-kpi-card">

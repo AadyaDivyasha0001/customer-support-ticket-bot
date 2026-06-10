@@ -59,6 +59,13 @@ function Dashboard() {
 
   const today = new Date();
 
+const angryTickets =
+  tickets.filter(
+    ticket =>
+      ticket.customerSentiment ===
+      "Angry"
+  ).length;
+  
   return (
     <div className="dashboard page-shell">
       {/* Page Header */}
@@ -94,10 +101,7 @@ function Dashboard() {
       Export Report
     </button>
 
-    <button className="btn btn-primary">
-      Create Ticket
-    </button>
-  </div>
+    </div>
 </div>
      
     
@@ -155,6 +159,8 @@ function Dashboard() {
             </div>
             <span className="badge badge-critical">High priority</span>
           </div>
+
+          
 
           <div>
             <h3>Critical Issues</h3>
@@ -228,6 +234,14 @@ function Dashboard() {
                 {urgentTickets.length}
               </span>
             </div>
+             <div>
+    <h3>Angry Customers</h3>
+    <h2>{angryTickets}</h2>
+    <p className="kpi-copy">
+      Customers requiring urgent attention
+    </p>
+  </div>
+
 
             <div className="urgent-count-row">
               <strong>{urgentTickets.length}</strong>

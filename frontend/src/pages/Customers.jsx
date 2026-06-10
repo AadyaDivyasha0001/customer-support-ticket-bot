@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import api from "../services/api";
 import {
   FaEnvelope,
@@ -10,47 +12,84 @@ import {
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+
+const [newCustomer, setNewCustomer] = useState({
+  customerName: "",
+  email: "",
+});
 
   useEffect(() => {
     fetchCustomers();
   }, []);
+const fetchCustomers = async () => {
+  try {
+    const response = await api.get(
+      "/api/customers"
+    );
 
-  const fetchCustomers = async () => {
-    try {
-      const response = await api.get("/tickets");
-      const tickets = response.data;
+    setCustomers(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+  
+         
+  const exportCustomersPDF = () => {
+  const doc = new jsPDF();
 
-      const groupedCustomers = Object.values(
-        tickets.reduce((acc, ticket) => {
-          if (!acc[ticket.email]) {
-            acc[ticket.email] = {
-              customerName: ticket.customerName,
-              email: ticket.email,
-              totalTickets: 0,
-              openTickets: 0,
-              resolvedTickets: 0,
-            };
-          }
+  doc.text("Customer Report", 14, 15);
 
-          acc[ticket.email].totalTickets++;
+  autoTable(doc, {
+    head: [["Customer", "Email", "Total Tickets"]],
+    body: customers.map((customer) => [
+      customer.customerName,
+      customer.email,
+      customer.totalTickets,
+    ]),
+  });
 
-          if (ticket.status === "Open") {
-            acc[ticket.email].openTickets++;
-          }
-
-          if (ticket.status === "Resolved") {
-            acc[ticket.email].resolvedTickets++;
-          }
-
-          return acc;
-        }, {})
-      );
-
-      setCustomers(groupedCustomers);
-    } catch (error) {
-      console.log(error);
+  doc.save("customer-report.pdf");
+};
+const handleAddCustomer = async () => {
+  try {
+    if (
+      !newCustomer.customerName ||
+      !newCustomer.email
+    ) {
+      alert("Please fill all fields");
+      return;
     }
-  };
+
+    await api.post(
+      "/api/customers",
+      {
+        customerName:
+          newCustomer.customerName,
+        email: newCustomer.email,
+      }
+    );
+
+    fetchCustomers();
+
+    setNewCustomer({
+      customerName: "",
+      email: "",
+    });
+
+    setShowCustomerModal(false);
+  } catch (error) {
+    console.log(error);
+
+    alert(
+      "Failed to add customer"
+    );
+  }
+};
+
+
+  
 
   const totalCustomers = customers.length;
 
@@ -68,7 +107,15 @@ const Customers = () => {
     (sum, customer) => sum + customer.resolvedTickets,
     0
   );
-
+const filteredCustomers = customers.filter(
+  (customer) =>
+    customer.customerName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()) ||
+    customer.email
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+);
   return (
     <div className="customers-page page-shell">
       <div className="page-header">
@@ -81,10 +128,23 @@ const Customers = () => {
           </p>
         </div>
 
-        <div className="page-actions">
-          <button className="btn">Export</button>
-          <button className="btn btn-primary">Add Customer</button>
-        </div>
+       <div className="page-actions">
+  <button
+    className="btn"
+    onClick={exportCustomersPDF}
+  >
+    Export
+  </button>
+
+  <button
+    className="btn btn-primary"
+    onClick={() =>
+      setShowCustomerModal(true)
+    }
+  >
+    Add Customer
+  </button>
+</div>
       </div>
 
       <div className="customer-summary-grid">
@@ -136,14 +196,18 @@ const Customers = () => {
             <p>Grouped from your support ticket history.</p>
           </div>
 
-          <input
-            className="panel-search"
-            type="text"
-            placeholder="Search customers..."
-          />
+         <input
+  className="panel-search"
+  type="text"
+  placeholder="Search customers..."
+  value={searchTerm}
+  onChange={(e) =>
+    setSearchTerm(e.target.value)
+  }
+/>
         </div>
 
-        {customers.length === 0 ? (
+       {filteredCustomers.length === 0 ? (
           <div className="empty-state">
             <h3>No customers found</h3>
             <p>Customer records will appear once tickets are created.</p>
@@ -163,7 +227,7 @@ const Customers = () => {
               </thead>
 
               <tbody>
-                {customers.map((customer, index) => {
+                {filteredCustomers.map((customer, index) => {
                   const initials = customer.customerName
                     ? customer.customerName
                         .split(" ")
@@ -233,6 +297,95 @@ const Customers = () => {
           </div>
         )}
       </div>
+      {showCustomerModal && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background:
+        "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 999,
+    }}
+  >
+    <div
+      style={{
+        background: "white",
+        padding: "25px",
+        borderRadius: "15px",
+        width: "400px",
+      }}
+    >
+      <h2>Add Customer</h2>
+
+      <input
+        type="text"
+        placeholder="Customer Name"
+        value={
+          newCustomer.customerName
+        }
+        onChange={(e) =>
+          setNewCustomer({
+            ...newCustomer,
+            customerName:
+              e.target.value,
+          })
+        }
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "10px",
+        }}
+      />
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={newCustomer.email}
+        onChange={(e) =>
+          setNewCustomer({
+            ...newCustomer,
+            email: e.target.value,
+          })
+        }
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "20px",
+        }}
+      />
+
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+        }}
+      >
+        <button
+          className="btn btn-primary"
+          onClick={
+            handleAddCustomer
+          }
+        >
+          Save
+        </button>
+
+        <button
+          className="btn"
+          onClick={() =>
+            setShowCustomerModal(
+              false
+            )
+          }
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
