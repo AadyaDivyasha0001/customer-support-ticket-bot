@@ -110,14 +110,17 @@ const issueText =
 
 
 /* PRIORITY PREDICTION */
-const existingTicket =
-  await Ticket.findOne({
-    email,
-    issue,
-    status: {
-      $ne: "Resolved",
-    },
-  });
+console.log("EMAIL:", email);
+console.log("ISSUE:", issue);
+
+const existingTicket = await Ticket.findOne({
+  email,
+  issue,
+  status: { $ne: "Resolved" },
+});
+
+console.log("EXISTING:", existingTicket);
+
 
 if (existingTicket) {
   return res.status(400).json({
