@@ -53,7 +53,7 @@ function Header({
       try {
         const response =
           await axios.get(
-            "https://customer-support-ticket-bot.onrender.com/notification"
+            "https://customer-support-ticket-bot.onrender.com/notifications"
           );
 
         setNotifications(
