@@ -42,34 +42,35 @@ const searchLimiter =
     message:
       "Too many requests. Please try again later.",
   });
-  
+
 const server =
   http.createServer(app);
 
 // SOCKET.IO SETUP
-const io = new Server(
-  server,
-  {
-    cors: {
-      origin:
-        "http://localhost:5173",
-      methods: [
-        "GET",
-        "POST",
-      ],
-    },
-  }
-);
-
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "https://customer-support-ticket-bot-frontend.onrender.com"
+    ],
+    methods: ["GET", "POST"],
+  },
+});
 // Make io accessible in routes
 app.set("io", io);
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      
+      "https://customer-support-ticket-bot-frontend.onrender.com",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
-
-let notifications = [];
-
 // Routes
 app.use(
   "/api/agents",
