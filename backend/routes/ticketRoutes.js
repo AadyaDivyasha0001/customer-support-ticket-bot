@@ -176,6 +176,7 @@ if (existingTicket) {
 
   const savedTicket =
   await newTicket.save();
+
   try {
   await sendEmail(
     savedTicket.email,
@@ -204,9 +205,7 @@ Support Team`
 
               
 
-      const savedTicket =
-        await newTicket.save();
-        
+     
         let customer =
   await Customer.findOne({
     email,
