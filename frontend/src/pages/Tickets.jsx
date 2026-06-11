@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
 const socket = io(
-  "http://localhost:5000"
+  "https://customer-support-ticket-bot.onrender.com"
 );
 
 const Tickets = () => {

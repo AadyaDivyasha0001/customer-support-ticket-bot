@@ -30,7 +30,7 @@ const Login = () => {
       try {
         const response =
           await axios.post(
-            "http://localhost:5000/auth/login",
+            "https://customer-support-ticket-bot.onrender.com/auth/login",
             {
               email,
               password,

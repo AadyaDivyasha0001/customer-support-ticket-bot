@@ -28,7 +28,7 @@ function Header({
 
   useEffect(() => {
   const socket = io(
-    "http://localhost:5000"
+    "https://customer-support-ticket-bot.onrender.com"
   );
 
   socket.on(
@@ -53,7 +53,7 @@ function Header({
       try {
         const response =
           await axios.get(
-            "http://localhost:5000/notifications"
+            "https://customer-support-ticket-bot.onrender.com/notification"
           );
 
         setNotifications(

@@ -16,7 +16,7 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/auth/register",
+        "https://customer-support-ticket-bot.onrender.com/auth/register",
         {
           name,
           email,
