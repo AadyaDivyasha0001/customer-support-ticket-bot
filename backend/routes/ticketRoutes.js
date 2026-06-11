@@ -173,6 +173,9 @@ if (existingTicket) {
       },
     ],
   });
+
+  const savedTicket =
+  await newTicket.save();
   try {
   await sendEmail(
     savedTicket.email,
@@ -278,7 +281,7 @@ io.emit(
 );
 try {
   await axios.post(
-    "http://localhost:5678/webhook-test/ticket-created",
+     "https://n8n-workflow.onrender.com/webhook-test/ticket-created",
     {
       ticketId:
         savedTicket._id,
@@ -529,6 +532,7 @@ router.put(
 });
 
 await ticket.save();
+
 
       await sendEmail(
   ticket.email,
