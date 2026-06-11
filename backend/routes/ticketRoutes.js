@@ -173,20 +173,11 @@ if (existingTicket) {
       },
     ],
   });
-
-     
-               
-
-              
-
-      const savedTicket =
-        await newTicket.save();
-        await sendEmail(
-  savedTicket.email,
-
-  "Ticket Created Successfully",
-
-  `Hello ${savedTicket.customerName},
+  try {
+  await sendEmail(
+    savedTicket.email,
+    "Ticket Created Successfully",
+    `Hello ${savedTicket.customerName},
 
 Your support ticket has been created successfully.
 
@@ -199,10 +190,20 @@ ${savedTicket.priority}
 Current Status:
 ${savedTicket.status}
 
-Our team will review your issue shortly.
-
 Support Team`
-);
+  );
+} catch (emailError) {
+  console.log("EMAIL ERROR:", emailError);
+}
+
+     
+               
+
+              
+
+      const savedTicket =
+        await newTicket.save();
+        
         let customer =
   await Customer.findOne({
     email,
