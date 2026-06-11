@@ -11,6 +11,10 @@ const express =
 const axios =
   require("axios");
 
+  const sendEmail =
+  require("../utils/sendEmail");
+  console.log("sendEmail:", sendEmail);
+
 const router =
   express.Router();
 
@@ -174,6 +178,28 @@ if (existingTicket) {
 
       const savedTicket =
         await newTicket.save();
+        await sendEmail(
+  savedTicket.email,
+
+  "Ticket Created Successfully",
+
+  `Hello ${savedTicket.customerName},
+
+Your support ticket has been created successfully.
+
+Issue:
+${savedTicket.issue}
+
+Priority:
+${savedTicket.priority}
+
+Current Status:
+${savedTicket.status}
+
+Our team will review your issue shortly.
+
+Support Team`
+);
         let customer =
   await Customer.findOne({
     email,
@@ -481,6 +507,7 @@ router.put(
         });
 
         await ticket.save();
+        
 
         return res.json(ticket);
       }
@@ -492,6 +519,32 @@ router.put(
       agent.tickets += 1;
 
       await agent.save();
+      ticket.activityLogs.push({
+  message: `Assigned to ${agent.name}`,
+  timestamp: new Date(),
+});
+
+await ticket.save();
+
+      await sendEmail(
+  ticket.email,
+
+  "Agent Assigned",
+
+  `Hello ${ticket.customerName},
+
+Your ticket has been assigned.
+
+Agent:
+${agent.name}
+
+Department:
+${agent.department}
+
+We are reviewing your issue.
+
+Support Team`
+);
 
       ticket.activityLogs.push({
         message:
@@ -515,65 +568,98 @@ router.put(
     }
   }
 );
-  router.put(
-  "/check-sla",
-  async (req, res) => {
+  router.put("/check-sla", async (req, res) => {
+  console.log("CHECK SLA ROUTE HIT");
 
-      console.log(
-      "CHECK SLA ROUTE HIT"
-    );
-    try {
+  const totalTickets = await Ticket.countDocuments();
 
-      const overdueTickets =
-        await Ticket.find({
-          status: {
-            $ne:
-              "Resolved",
-          },
+console.log("TOTAL TICKETS:", totalTickets);
 
-          slaDeadline: {
-            $lt:
-              new Date(),
-          },
+const sampleTicket = await Ticket.findOne();
 
-          isEscalated:
-            false,
-        });
+console.log("SAMPLE TICKET:", sampleTicket);
+   const slaTest = await Ticket.findOne({
+    customerName: "SLA Test User",
+  });
 
-      for (
-        const ticket of overdueTickets
-      ) {
+  console.log("SLA TEST:", slaTest);
 
-        ticket.isEscalated =
-          true;
+  console.log("NOW:", new Date());
 
-        ticket.status =
-          "Escalated";
+  const overdueTickets = await Ticket.find({
+    status: { $ne: "Resolved" },
+    slaDeadline: { $lt: new Date() },
+    isEscalated: false,
+  });
 
-        await ticket.save();
-      }
+  console.log(
+    "Overdue tickets:",
+    overdueTickets.map(t => ({
+      id: t._id,
+      status: t.status,
+      isEscalated: t.isEscalated,
+      slaDeadline: t.slaDeadline,
+    }))
+  );
 
-      res.json({
-        escalated:
-          overdueTickets.length,
-      });
+for (const ticket of overdueTickets) {
 
-    } catch (error) {
+  ticket.isEscalated = true;
 
-      res.status(500).json({
-        message:
-          error.message,
-      });
-    }
+  ticket.status = "Escalated";
+
+  ticket.activityLogs.push({
+    message:
+      "Ticket escalated due to SLA breach",
+    timestamp:
+      new Date(),
+  });
+
+  await ticket.save();
+
+  await sendEmail(
+    ticket.email,
+
+    "SLA Escalation Alert",
+
+    `Hello ${ticket.customerName},
+
+Your support ticket has been escalated due to SLA breach.
+
+Issue:
+${ticket.issue}
+
+Current Status:
+Escalated
+
+Support Team`
+  );
+
   }
-);
+
+  res.json({
+    escalated: overdueTickets.length,
+  });
+});
 router.put(
   "/:id",
   authMiddleware,
   async (req, res) => {
     try {
-      const updatedTicket =
-        await Ticket.findByIdAndUpdate(
+       const ticket =
+  await Ticket.findById(req.params.id);
+
+if (!ticket) {
+  return res.status(404).json({
+    message: "Ticket not found",
+  });
+}
+
+const oldStatus =
+  ticket.status;
+
+const updatedTicket =
+  await Ticket.findByIdAndUpdate(
           req.params.id,
           {
             status:
@@ -651,7 +737,34 @@ io.emit(
     message: `✅ Ticket ${updatedTicket.status} - ${updatedTicket.customerName}`,
   }
 );
+if (
+  oldStatus !==
+  updatedTicket.status
+) {
+    console.log("ABOUT TO SEND EMAIL");
+console.log(typeof sendEmail);
+  await sendEmail(
+    updatedTicket.email,
 
+    "Ticket Status Updated",
+
+    `Hello ${updatedTicket.customerName},
+
+Your support ticket has been updated.
+
+Issue:
+${updatedTicket.issue}
+
+Previous Status:
+${oldStatus}
+
+Current Status:
+${updatedTicket.status}
+
+Thank you,
+Support Team`
+  );
+}
       res.status(200).json(
         updatedTicket
       );
