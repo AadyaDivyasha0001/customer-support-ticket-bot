@@ -284,7 +284,7 @@ console.log("Sending webhook:", {
 });
   try {
   const response = await axios.post(
-    "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
+    "https://n8n-workflow-wquh.onrender.com/webhook/ticket-created",
     {
        _id: savedTicket._id,
   customerName: savedTicket.customerName,
