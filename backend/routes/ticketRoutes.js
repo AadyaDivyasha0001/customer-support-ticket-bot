@@ -173,15 +173,60 @@ if (existingTicket) {
       },
     ],
   });
+const savedTicket = await newTicket.save();
 
-  const savedTicket =
-  await newTicket.save();
+// SEND SUCCESS TO FRONTEND IMMEDIATELY
+res.status(201).json(savedTicket);
 
-  try {
-  await sendEmail(
-    savedTicket.email,
-    "Ticket Created Successfully",
-    `Hello ${savedTicket.customerName},
+// CUSTOMER UPDATE
+try {
+  let customer = await Customer.findOne({ email });
+
+  if (customer) {
+    customer.totalTickets += 1;
+
+    if (savedTicket.status === "Open") {
+      customer.openTickets += 1;
+    }
+
+    if (savedTicket.status === "Resolved") {
+      customer.resolvedTickets += 1;
+    }
+
+    await customer.save();
+  } else {
+    await Customer.create({
+      customerName,
+      email,
+      totalTickets: 1,
+      openTickets:
+        savedTicket.status === "Open" ? 1 : 0,
+      resolvedTickets:
+        savedTicket.status === "Resolved" ? 1 : 0,
+    });
+  }
+} catch (err) {
+  console.log("CUSTOMER UPDATE ERROR:", err);
+}
+
+// SOCKET EVENTS
+try {
+  const io = req.app.get("io");
+
+  io.emit("ticketCreated", savedTicket);
+
+  io.emit("newNotification", {
+    message: `🎫 New Ticket Created - ${savedTicket.customerName}`,
+  });
+} catch (err) {
+  console.log("SOCKET ERROR:", err);
+}
+
+// EMAIL
+sendEmail(
+  savedTicket.email,
+  "Ticket Created Successfully",
+  `Hello ${savedTicket.customerName},
 
 Your support ticket has been created successfully.
 
@@ -195,115 +240,35 @@ Current Status:
 ${savedTicket.status}
 
 Support Team`
-  );
-} catch (emailError) {
-  console.log("EMAIL ERROR:", emailError);
-}
-
-     
-               
-
-              
-
-     
-        let customer =
-  await Customer.findOne({
-    email,
-  });
-
-if (customer) {
-  customer.totalTickets += 1;
-
-  if (
-    savedTicket.status ===
-    "Open"
-  ) {
-    customer.openTickets += 1;
-  }
-
-  if (
-    savedTicket.status ===
-    "Resolved"
-  ) {
-    customer.resolvedTickets += 1;
-  }
-
-  await customer.save();
-} else {
-  await Customer.create({
-    customerName,
-    email,
-    totalTickets: 1,
-    openTickets:
-      savedTicket.status ===
-      "Open"
-        ? 1
-        : 0,
-    resolvedTickets:
-      savedTicket.status ===
-      "Resolved"
-        ? 1
-        : 0,
-  }); 
-}
-
-      // SOCKET.IO EVENT
-      const io =
-        req.app.get(
-          "io"
-        );
-
-      io.emit(
-  "ticketCreated",
-  savedTicket
-);
-
-io.emit(
-  "newNotification",
-  {
-    message: `🎫 New Ticket Created - ${savedTicket.customerName}`,
-  }
-);
-
-      // SEND TO N8N
-      // SEND TO N8N
-      // SEND TO N8N
-      console.log("Sending to n8n:", {
-  ticketId: savedTicket._id,
-  customerName: savedTicket.customerName,
-  email: savedTicket.email,
-  issue: savedTicket.issue,
-  priority: savedTicket.priority,
-});
-console.log("Sending webhook:", {
-  _id: savedTicket._id,
-  customerName: savedTicket.customerName,
-  email: savedTicket.email,
-  issue: savedTicket.issue,
-  priority: savedTicket.priority
+).catch((err) => {
+  console.log("EMAIL ERROR:", err);
 });
 
-console.log("BEFORE AXIOS");
+// N8N WEBHOOK
+(async () => {
   try {
-  const response = await axios.post(
-   "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
-    {
-       _id: savedTicket._id,
-  customerName: savedTicket.customerName,
-  email: savedTicket.email,
-  issue: savedTicket.issue,
-  priority: savedTicket.priority,
-    }
-  );
-  console.log("AFTER AXIOS");
+    console.log("Sending webhook to n8n...");
 
-  console.log("N8N RESPONSE:", response.data);
-} catch (err) {
-  console.log(
-    "N8N ERROR:",
-    err.response?.data || err.message
-  );
-}
+    const response = await axios.post(
+      "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
+      {
+        _id: savedTicket._id,
+        customerName: savedTicket.customerName,
+        email: savedTicket.email,
+        issue: savedTicket.issue,
+        priority: savedTicket.priority,
+      }
+    );
+
+    console.log("N8N RESPONSE:", response.data);
+  } catch (err) {
+    console.log(
+      "N8N ERROR:",
+      err.response?.data || err.message
+    );
+  }
+})();
+ 
     res.status(201).json(savedTicket);
 
 } catch (error) {
