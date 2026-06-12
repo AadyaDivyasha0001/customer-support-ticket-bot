@@ -176,7 +176,7 @@ if (existingTicket) {
 
   const savedTicket =
   await newTicket.save();
-return res.status(201).json(savedTicket);
+
   try {
   await sendEmail(
     savedTicket.email,
