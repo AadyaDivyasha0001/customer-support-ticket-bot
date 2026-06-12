@@ -268,57 +268,44 @@ io.emit(
       // SEND TO N8N
       // SEND TO N8N
       // SEND TO N8N
-      console.log(
-  "Sending to n8n:",
-  {
-    ticketId: savedTicket._id,
-    customerName: savedTicket.customerName,
-    email: savedTicket.email,
-    issue: savedTicket.issue,
-    priority: savedTicket.priority,
-  }
-);
+      console.log("Sending to n8n:", {
+  ticketId: savedTicket._id,
+  customerName: savedTicket.customerName,
+  email: savedTicket.email,
+  issue: savedTicket.issue,
+  priority: savedTicket.priority,
+});
+
 try {
-  await axios.post(
-     "https://n8n-workflow.onrender.com/webhook/ticket-created",
+  const response = await axios.post(
+    "https://n8n-workflow.onrender.com/webhook/ticket-created",
     {
-      ticketId:
-        savedTicket._id,
-
-      customerName:
-        savedTicket.customerName,
-
-      email:
-        savedTicket.email,
-
-      issue:
-        savedTicket.issue,
-
-      priority:
-        savedTicket.priority,
+      ticketId: savedTicket._id,
+      customerName: savedTicket.customerName,
+      email: savedTicket.email,
+      issue: savedTicket.issue,
+      priority: savedTicket.priority,
     }
   );
-}
-catch (
-  webhookError
-) {
+
+  console.log("N8N RESPONSE:", response.data);
+} catch (err) {
   console.log(
-    "n8n webhook error:",
-    webhookError.message
+    "N8N ERROR:",
+    err.response?.data || err.message
   );
 }
+    res.status(201).json(savedTicket);
 
-res.status(201).json(
-  savedTicket
-)
-    } catch (error) {
-      res.status(500).json({
-        message:
-          error.message,
-      });
-    }
-  }
+} catch (error) {
+  res.status(500).json({
+    message: error.message,
+  });
+}
+}
 );
+
+
 
 
 // GET ALL TICKETS
@@ -787,6 +774,6 @@ Support Team`
     }
   }
 );
-
+   
 module.exports =
   router;
