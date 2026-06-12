@@ -275,7 +275,13 @@ io.emit(
   issue: savedTicket.issue,
   priority: savedTicket.priority,
 });
-
+console.log("Sending webhook:", {
+  _id: ticket._id,
+  customerName: ticket.customerName,
+  email: ticket.email,
+  issue: ticket.issue,
+  priority: ticket.priority
+});
   try {
   const response = await axios.post(
     "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
