@@ -282,6 +282,8 @@ console.log("Sending webhook:", {
   issue: savedTicket.issue,
   priority: savedTicket.priority
 });
+
+console.log("BEFORE AXIOS");
   try {
   const response = await axios.post(
     "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
@@ -293,6 +295,7 @@ console.log("Sending webhook:", {
   priority: savedTicket.priority,
     }
   );
+  console.log("AFTER AXIOS");
 
   console.log("N8N RESPONSE:", response.data);
 } catch (err) {
