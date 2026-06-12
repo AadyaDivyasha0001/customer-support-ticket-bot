@@ -176,7 +176,7 @@ if (existingTicket) {
 
   const savedTicket =
   await newTicket.save();
-
+return res.status(201).json(savedTicket);
   try {
   await sendEmail(
     savedTicket.email,
@@ -244,7 +244,7 @@ if (customer) {
       "Resolved"
         ? 1
         : 0,
-  });
+  }); 
 }
 
       // SOCKET.IO EVENT
@@ -276,9 +276,9 @@ io.emit(
   priority: savedTicket.priority,
 });
 
-try {
+  try {
   const response = await axios.post(
-    "https://n8n-workflow.onrender.com/webhook/ticket-created",
+    "https://n8n-workflow-wquh.onrender.com/webhook/ticket-created",
     {
       ticketId: savedTicket._id,
       customerName: savedTicket.customerName,
