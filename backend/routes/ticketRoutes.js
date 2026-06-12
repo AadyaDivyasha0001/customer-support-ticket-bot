@@ -286,11 +286,11 @@ console.log("Sending webhook:", {
   const response = await axios.post(
     "https://n8n-workflow-wquh.onrender.com/webhook-test/ticket-created",
     {
-      ticketId: savedTicket._id,
-      customerName: savedTicket.customerName,
-      email: savedTicket.email,
-      issue: savedTicket.issue,
-      priority: savedTicket.priority,
+       _id: ticket._id,
+  customerName: ticket.customerName,
+  email: ticket.email,
+  issue: ticket.issue,
+  priority: ticket.priority,
     }
   );
 
