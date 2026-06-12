@@ -450,18 +450,38 @@ router.put(
   async (req, res) => {
     try {
 
-      const ticket =
-        await Ticket.findById(
-          req.params.id
-        );
+      console.log("ASSIGN AGENT ROUTE HIT");
+      console.log("Ticket ID:", req.params.id);
 
-      const agent =
-        await Agent.findOne({
-          department:
-            ticket.department,
-        }).sort({
-          tickets: 1,
+      const ticket = await Ticket.findById(
+        req.params.id
+      );
+
+      if (!ticket) {
+        return res.status(404).json({
+          message: "Ticket not found",
         });
+      }
+
+      console.log("TICKET FOUND");
+
+      // ALREADY ASSIGNED
+      if (ticket.assignedAgent) {
+        console.log("TICKET ALREADY ASSIGNED");
+
+        return res.json(ticket);
+      }
+
+      const agent = await Agent.findOne({
+        department: ticket.department,
+      }).sort({
+        tickets: 1,
+      });
+
+      console.log(
+        "AGENT FOUND:",
+        agent?.name
+      );
 
       // NO AGENT FOUND
       if (!agent) {
@@ -474,7 +494,10 @@ router.put(
         });
 
         await ticket.save();
-        
+
+        console.log(
+          "NO AGENT FOUND"
+        );
 
         return res.json(ticket);
       }
@@ -486,20 +509,31 @@ router.put(
       agent.tickets += 1;
 
       await agent.save();
+
+      console.log(
+        "AGENT SAVED"
+      );
+
       ticket.activityLogs.push({
-  message: `Assigned to ${agent.name}`,
-  timestamp: new Date(),
-});
+        message: `Assigned to ${agent.name}`,
+        timestamp: new Date(),
+      });
 
-await ticket.save();
+      await ticket.save();
 
+      console.log(
+        "TICKET SAVED"
+      );
 
-      await sendEmail(
-  ticket.email,
+      // EMAIL SHOULD NEVER BREAK THE FLOW
+      try {
 
-  "Agent Assigned",
+        await sendEmail(
+          ticket.email,
 
-  `Hello ${ticket.customerName},
+          "Agent Assigned",
+
+          `Hello ${ticket.customerName},
 
 Your ticket has been assigned.
 
@@ -512,24 +546,34 @@ ${agent.department}
 We are reviewing your issue.
 
 Support Team`
-);
+        );
 
-      ticket.activityLogs.push({
-        message:
-          `Assigned to ${agent.name}`,
-        timestamp:
-          new Date(),
-      });
+        console.log(
+          "ASSIGNMENT EMAIL SENT"
+        );
 
-      await ticket.save();
+      } catch (emailError) {
 
-      res.json(ticket);
+        console.log(
+          "EMAIL ERROR:",
+          emailError
+        );
+      }
+
+      console.log(
+        "SENDING RESPONSE"
+      );
+
+      return res.json(ticket);
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "ASSIGN AGENT ERROR:",
+        error
+      );
 
-      res.status(500).json({
+      return res.status(500).json({
         message:
           error.message,
       });
