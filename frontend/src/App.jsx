@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-
+import AgentDashboard from "./pages/AgentDashboard";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
@@ -59,6 +59,10 @@ const role = user?.role;
   }
   if (role === "Customer") {
   return <CustomerDashboard />;
+
+  if (role === "Agent") {
+  return <AgentDashboard />;
+  }
 }
   if (showWelcome) {
   return (
