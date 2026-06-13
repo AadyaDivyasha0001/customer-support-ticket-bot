@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaTicketAlt,
   FaClock,
@@ -7,78 +8,336 @@ import {
   FaComments,
   FaUser,
   FaSignOutAlt,
+  FaChartBar,
 } from "react-icons/fa";
 
 const AgentDashboard = () => {
+  const [activePage, setActivePage] =
+    useState("dashboard");
+
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
   };
 
+  const DashboardContent = () => (
+    <>
+      <h1
+        style={{
+          color: "white",
+          marginBottom: "10px",
+        }}
+      >
+        Agent Dashboard
+      </h1>
+
+      <p
+        style={{
+          color: "#94a3b8",
+          marginBottom: "25px",
+        }}
+      >
+        Manage tickets, customers and AI-assisted support.
+      </p>
+
+      {/* Stat Cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit,minmax(240px,1fr))",
+          gap: "20px",
+        }}
+      >
+        <StatCard
+          title="Assigned Tickets"
+          value="12"
+          icon={<FaTicketAlt />}
+        />
+
+        <StatCard
+          title="Open Tickets"
+          value="7"
+          icon={<FaClock />}
+        />
+
+        <StatCard
+          title="Resolved Today"
+          value="8"
+          icon={<FaCheckCircle />}
+        />
+
+        <StatCard
+          title="SLA Alerts"
+          value="2"
+          icon={<FaExclamationTriangle />}
+        />
+      </div>
+
+      {/* Main Grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "2fr 1fr",
+          gap: "20px",
+          marginTop: "25px",
+        }}
+      >
+        {/* Tickets Table */}
+        <div className="agent-card">
+          <h3>
+            Recent Assigned Tickets
+          </h3>
+
+          <table
+            style={{
+              width: "100%",
+              marginTop: "20px",
+              color: "white",
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Customer</th>
+                <th>Priority</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>T001</td>
+                <td>Nikhil</td>
+                <td>High</td>
+                <td>Open</td>
+              </tr>
+
+              <tr>
+                <td>T002</td>
+                <td>Rajat</td>
+                <td>Medium</td>
+                <td>In Progress</td>
+              </tr>
+
+              <tr>
+                <td>T003</td>
+                <td>Shyamal</td>
+                <td>Low</td>
+                <td>Resolved</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* AI Suggestions */}
+        <div className="agent-card">
+          <h3>
+            <FaRobot />
+            {" "}AI Suggestions
+          </h3>
+
+          <div
+            style={{
+              marginTop: "20px",
+            }}
+          >
+            <p>
+              Department:
+              <strong>
+                {" "}Billing
+              </strong>
+            </p>
+
+            <p>
+              Priority:
+              <strong>
+                {" "}High
+              </strong>
+            </p>
+
+            <p>
+              Sentiment:
+              <strong>
+                {" "}Neutral
+              </strong>
+            </p>
+
+            <p>
+              Confidence:
+              <strong>
+                {" "}95%
+              </strong>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Row */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px",
+          marginTop: "25px",
+        }}
+      >
+        <div className="agent-card">
+          <h3>
+            SLA Monitor
+          </h3>
+
+          <p>
+            ⚠ Ticket #T004
+            - 2 Hours Left
+          </p>
+
+          <p>
+            ⚠ Ticket #T009
+            - 45 Minutes Left
+          </p>
+        </div>
+
+        <div className="agent-card">
+          <h3>
+            Performance Overview
+          </h3>
+
+          <p>
+            Tickets Resolved:
+            35
+          </p>
+
+          <p>
+            Average Response:
+            12 min
+          </p>
+
+          <p>
+            Customer Satisfaction:
+            92%
+          </p>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div
       style={{
-        minHeight: "100vh",
-        background: "#0f172a",
-        color: "white",
         display: "flex",
+        minHeight: "100vh",
+        background:
+          "#0f172a",
       }}
     >
       {/* Sidebar */}
       <div
         style={{
           width: "260px",
-          background: "#111827",
+          background:
+            "#111827",
           padding: "25px",
-          borderRight: "1px solid #1e293b",
+          borderRight:
+            "1px solid #1e293b",
         }}
       >
         <h2
           style={{
-            marginBottom: "40px",
+            color: "white",
+            marginBottom: "35px",
           }}
         >
           Agent Panel
         </h2>
 
-        <div className="menu-item">
-          🏠 Dashboard
-        </div>
+        <SidebarItem
+          text="Dashboard"
+          icon="🏠"
+          active={
+            activePage ===
+            "dashboard"
+          }
+          onClick={() =>
+            setActivePage(
+              "dashboard"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          🎫 Assigned Tickets
-        </div>
+        <SidebarItem
+          text="Assigned Tickets"
+          icon="🎫"
+          onClick={() =>
+            setActivePage(
+              "assigned"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          📂 Open Tickets
-        </div>
+        <SidebarItem
+          text="Open Tickets"
+          icon="📂"
+          onClick={() =>
+            setActivePage(
+              "open"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          🤖 AI Suggestions
-        </div>
+        <SidebarItem
+          text="AI Suggestions"
+          icon="🤖"
+          onClick={() =>
+            setActivePage(
+              "ai"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          💬 Messages
-        </div>
+        <SidebarItem
+          text="Messages"
+          icon="💬"
+          onClick={() =>
+            setActivePage(
+              "messages"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          📊 Performance
-        </div>
+        <SidebarItem
+          text="Performance"
+          icon="📊"
+          onClick={() =>
+            setActivePage(
+              "performance"
+            )
+          }
+        />
 
-        <div className="menu-item">
-          👤 Profile
-        </div>
+        <SidebarItem
+          text="Profile"
+          icon="👤"
+          onClick={() =>
+            setActivePage(
+              "profile"
+            )
+          }
+        />
 
         <button
           onClick={logout}
           style={{
             width: "100%",
             marginTop: "40px",
-            background: "#ef4444",
+            background:
+              "#ef4444",
             color: "white",
             border: "none",
             padding: "12px",
-            borderRadius: "10px",
+            borderRadius: "12px",
             cursor: "pointer",
           }}
         >
@@ -94,181 +353,54 @@ const AgentDashboard = () => {
           padding: "30px",
         }}
       >
-        <h1>Agent Dashboard</h1>
-
-        <p
-          style={{
-            color: "#94a3b8",
-            marginBottom: "30px",
-          }}
-        >
-          Manage assigned tickets and customer communication.
-        </p>
-
-        {/* Stats */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(220px,1fr))",
-            gap: "20px",
+            background:
+              "#111827",
+            padding: "20px",
+            borderRadius: "16px",
+            marginBottom: "20px",
+            color: "white",
           }}
         >
-          <StatCard
-            icon={<FaTicketAlt />}
-            title="Assigned Tickets"
-            value="12"
-          />
-
-          <StatCard
-            icon={<FaClock />}
-            title="Open Tickets"
-            value="7"
-          />
-
-          <StatCard
-            icon={<FaCheckCircle />}
-            title="Resolved Today"
-            value="8"
-          />
-
-          <StatCard
-            icon={<FaExclamationTriangle />}
-            title="SLA Alerts"
-            value="2"
-          />
+          Welcome Back Agent 👋
         </div>
 
-        {/* Sections */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "2fr 1fr",
-            gap: "20px",
-            marginTop: "30px",
-          }}
-        >
-          {/* Tickets */}
-          <div className="agent-card">
-            <h3>
-              Assigned Tickets
-            </h3>
-
-            <table
-              style={{
-                width: "100%",
-                marginTop: "20px",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th>Ticket</th>
-                  <th>Customer</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>T001</td>
-                  <td>Nikhil</td>
-                  <td>Open</td>
-                </tr>
-
-                <tr>
-                  <td>T002</td>
-                  <td>Rajat</td>
-                  <td>In Progress</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* AI Panel */}
-          <div className="agent-card">
-            <h3>
-              <FaRobot />
-              {" "}AI Suggestions
-            </h3>
-
-            <p
-              style={{
-                marginTop: "15px",
-              }}
-            >
-              Suggested Department:
-              Billing
-            </p>
-
-            <p>
-              Suggested Priority:
-              High
-            </p>
-
-            <p>
-              Confidence:
-              95%
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Row */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "1fr 1fr",
-            gap: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <div className="agent-card">
-            <h3>SLA Monitor</h3>
-
-            <p>
-              ⚠ Ticket #T004
-              - 2 Hours Left
-            </p>
-
-            <p>
-              ⚠ Ticket #T009
-              - 45 Minutes Left
-            </p>
-          </div>
-
-          <div className="agent-card">
-            <h3>Performance</h3>
-
-            <p>
-              Tickets Resolved:
-              35
-            </p>
-
-            <p>
-              Avg Response:
-              12 min
-            </p>
-
-            <p>
-              Satisfaction:
-              92%
-            </p>
-          </div>
-        </div>
+        <DashboardContent />
       </div>
     </div>
   );
 };
 
-const StatCard = ({
+const SidebarItem = ({
+  text,
   icon,
-  title,
-  value,
+  active,
+  onClick,
 }) => (
   <div
-    className="agent-card"
+    onClick={onClick}
+    style={{
+      padding: "14px",
+      marginBottom: "10px",
+      borderRadius: "12px",
+      cursor: "pointer",
+      color: "white",
+      background: active
+        ? "#2563eb"
+        : "transparent",
+    }}
   >
+    {icon} {text}
+  </div>
+);
+
+const StatCard = ({
+  title,
+  value,
+  icon,
+}) => (
+  <div className="agent-card">
     <div
       style={{
         fontSize: "28px",
@@ -278,7 +410,7 @@ const StatCard = ({
       {icon}
     </div>
 
-    <h3>{value}</h3>
+    <h2>{value}</h2>
 
     <p>{title}</p>
   </div>

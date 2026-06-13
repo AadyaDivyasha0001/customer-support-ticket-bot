@@ -3656,22 +3656,11 @@ cursor:pointer;
   background: #1e293b;
   padding: 20px;
   border-radius: 16px;
+  color: white;
   box-shadow: 0 0 20px rgba(59,130,246,0.15);
   transition: 0.3s;
 }
 
 .agent-card:hover {
   transform: translateY(-5px);
-}
-
-.menu-item {
-  padding: 14px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.menu-item:hover {
-  background: #1e293b;
 }
