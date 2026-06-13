@@ -11,7 +11,8 @@ import Agents from "./pages/Agents";
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
 import WelcomeScreen from "./components/WelcomeScreen";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   FaTicketAlt,
   FaHeadset,
@@ -55,14 +56,15 @@ const role = user?.role;
   };
 
   if (!token) {
-    return <Login />;
-  }
-  if (role === "Customer") {
-  return <CustomerDashboard />;
+  return <Login />;
+}
 
-  if (role === "Agent") {
+if (role === "Customer") {
+  return <CustomerDashboard />;
+}
+
+if (role === "Agent") {
   return <AgentDashboard />;
-  }
 }
   if (showWelcome) {
   return (
