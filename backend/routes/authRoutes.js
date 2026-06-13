@@ -32,6 +32,7 @@ router.post(
         name,
         email,
         password,
+        role,
       } = req.body;
 
       const existingUser =
@@ -63,6 +64,7 @@ router.post(
             email,
             password:
               hashedPassword,
+              role,
           }
         );
 
@@ -88,6 +90,7 @@ router.post(
       const {
         email,
         password,
+        
       } = req.body;
 
       const user =

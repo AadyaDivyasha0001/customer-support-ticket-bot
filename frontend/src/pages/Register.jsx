@@ -12,7 +12,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+const [role, setRole] = useState("Customer");
   const handleRegister = async () => {
     try {
       await axios.post(
@@ -21,6 +21,7 @@ const Register = () => {
           name,
           email,
           password,
+          role,
         }
       );
 
@@ -141,6 +142,25 @@ const Register = () => {
           }
           className="auth-input"
         />
+        <select
+  value={role}
+  onChange={(e) =>
+    setRole(e.target.value)
+  }
+  className="auth-input"
+>
+  <option value="Customer">
+    Customer
+  </option>
+
+  <option value="Agent">
+    Agent
+  </option>
+
+  <option value="Admin">
+    Admin
+  </option>
+</select>
 
         <button
           onClick={handleRegister}
