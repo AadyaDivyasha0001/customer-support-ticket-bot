@@ -41,9 +41,31 @@ const Login = () => {
           "token",
           response.data.token
         );
-
+localStorage.setItem( 
+    "user", 
+    JSON.stringify( 
+        response.data.user ) 
+    ); 
+    const role = 
+    response.data.user.role; 
+    if ( 
+        role === "Customer"
+     ) {
         window.location.href =
-          "/";
+          "/customer-dashboard";
+     }
+     else if(
+        role ==="Agent"
+     ){
+        window.location.href = 
+        "/agent-dashboard";
+     }
+     else if (
+        role === "Admin"
+     ){
+        window.location.href = 
+        "/dashboard";
+     }
       } catch (error) {
         alert(
           "Invalid Credentials"

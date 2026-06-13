@@ -4,7 +4,7 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
-
+import CustomerDashboard from "./pages/CustomerDashboard";
 import Tickets from "./pages/Tickets";
 import Customers from "./pages/Customers";
 import Agents from "./pages/Agents";
@@ -28,6 +28,11 @@ function App() {
     localStorage.getItem(
       "token"
     );
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+const role = user?.role;
     const [showWelcome, setShowWelcome] = useState(true);
 
   const renderPage = () => {
@@ -52,6 +57,9 @@ function App() {
   if (!token) {
     return <Login />;
   }
+  if (role === "Customer") {
+  return <CustomerDashboard />;
+}
   if (showWelcome) {
   return (
     <WelcomeScreen
