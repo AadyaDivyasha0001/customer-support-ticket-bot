@@ -3648,3 +3648,7 @@ cursor:pointer;
 .contact-popup-body strong {
   color: #0f172a;
 }
+.auth-input option {
+  color: white;
+  background: #1e293b;
+}
