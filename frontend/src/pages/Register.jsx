@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import {
   FaTicketAlt,
   FaHeadset,
@@ -25,19 +26,44 @@ const [role, setRole] = useState("Customer");
         }
       );
 
-      alert(
-        "Registration Successful! Please Login."
-      );
-
+      toast.success(
+  "Registration successful!"
+);
+       setTimeout(() => {
       window.location.href = "/";
-    } catch (error) {
-      console.log(error);
+    },1500);
+}
+    catch (error) {
 
-      alert(
-        error.response?.data?.message ||
-          "Registration Failed"
-      );
-    }
+  const message =
+    error.response?.data?.message;
+
+  if (
+    message?.includes(
+      "enum value"
+    )
+  ) {
+    toast.error(
+      "Selected account type is invalid."
+    );
+  }
+
+  else if (
+    message?.includes(
+      "already exists"
+    )
+  ) {
+    toast.warning(
+      "Email already registered."
+    );
+  }
+
+  else {
+    toast.error(
+      "Registration failed. Please try again."
+    );
+  }
+}
   };
 
   return (
