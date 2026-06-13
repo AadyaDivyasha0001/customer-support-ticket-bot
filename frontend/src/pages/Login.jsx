@@ -60,24 +60,19 @@ localStorage.setItem(
     response.data.user
   )
 );
-localStorage.setItem( 
-    "user", 
-    JSON.stringify( 
-        response.data.user ) 
-    ); 
     const role = 
     response.data.user.role; 
     if ( 
         role === "Customer"
      ) {
         window.location.href =
-          "/customer-dashboard";
+          "/";
      }
      else if(
         role ==="Agent"
      ){
         window.location.href = 
-        "/agent-dashboard";
+        "/";
      }
      else if (
         role === "Admin"
