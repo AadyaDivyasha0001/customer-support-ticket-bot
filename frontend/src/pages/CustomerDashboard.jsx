@@ -23,7 +23,7 @@ const CustomerDashboard = () => {
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "#0f172a",
+       background: "#f3f4f6",
       }}
     >
       {/* Sidebar */}
@@ -138,6 +138,57 @@ const CustomerDashboard = () => {
         >
           Create and track support tickets.
         </p>
+        <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "25px",
+  }}
+>
+  <input
+    type="text"
+    placeholder="Search tickets..."
+    style={{
+      width: "450px",
+      padding: "12px",
+      borderRadius: "12px",
+      border: "1px solid #d1d5db",
+    }}
+  />
+
+  <div
+    style={{
+      display: "flex",
+      gap: "15px",
+      alignItems: "center",
+    }}
+  >
+    <button
+      style={{
+        background: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "12px 20px",
+        borderRadius: "12px",
+      }}
+    >
+      + Create Ticket
+    </button>
+
+    <div
+      style={{
+        background: "white",
+        padding: "10px 18px",
+        borderRadius: "12px",
+        boxShadow:
+          "0 2px 10px rgba(0,0,0,0.08)",
+      }}
+    >
+      Customer
+    </div>
+  </div>
+</div>
 
         {/* Cards */}
         <div
@@ -184,10 +235,12 @@ const CustomerDashboard = () => {
 
           <table
             style={{
-              width: "100%",
-              marginTop: "20px",
-              color: "white",
-            }}
+  background: "white",
+  borderRadius: "20px",
+  padding: "25px",
+  boxShadow:
+    "0 2px 10px rgba(0,0,0,0.08)"
+}}
           >
             <thead>
               <tr>
@@ -296,19 +349,40 @@ const StatCard = ({
   value,
   icon,
 }) => (
-  <div className="agent-card">
+  <div
+    style={{
+      background: "white",
+      borderRadius: "20px",
+      padding: "25px",
+      boxShadow:
+        "0 2px 10px rgba(0,0,0,0.08)",
+    }}
+  >
     <div
       style={{
         fontSize: "28px",
-        marginBottom: "10px",
+        color: "#2563eb",
+        marginBottom: "15px",
       }}
     >
       {icon}
     </div>
 
-    <h2>{value}</h2>
+    <h2
+      style={{
+        color: "#111827",
+      }}
+    >
+      {value}
+    </h2>
 
-    <p>{title}</p>
+    <p
+      style={{
+        color: "#6b7280",
+      }}
+    >
+      {title}
+    </p>
   </div>
 );
 
