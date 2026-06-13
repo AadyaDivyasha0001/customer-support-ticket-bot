@@ -20,6 +20,8 @@ const Login = () => {
     password,
     setPassword,
   ] = useState("");
+  const [loginRole, setLoginRole] =
+  useState("Admin");
   const [
   showRegister,
   setShowRegister,
@@ -37,10 +39,27 @@ const Login = () => {
             }
           );
 
-        localStorage.setItem(
-          "token",
-          response.data.token
-        );
+        if (
+  response.data.user.role !==
+  loginRole
+) {
+  alert(
+    `This account is registered as ${response.data.user.role}`
+  );
+  return;
+}
+
+localStorage.setItem(
+  "token",
+  response.data.token
+);
+
+localStorage.setItem(
+  "user",
+  JSON.stringify(
+    response.data.user
+  )
+);
 localStorage.setItem( 
     "user", 
     JSON.stringify( 
@@ -157,7 +176,25 @@ return (
       >
         Login
       </h2>
+<select
+  value={loginRole}
+  onChange={(e) =>
+    setLoginRole(e.target.value)
+  }
+  className="auth-input"
+>
+  <option value="Admin">
+    Admin
+  </option>
 
+  <option value="Agent">
+    Agent
+  </option>
+
+  <option value="Customer">
+    Customer
+  </option>
+</select>
       <input
         type="email"
         placeholder="Email"
