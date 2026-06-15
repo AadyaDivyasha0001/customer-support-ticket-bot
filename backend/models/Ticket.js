@@ -19,6 +19,10 @@ const ticketSchema =
         required: true,
       },
 
+      title: String,
+
+description: String,
+
       priority: {
         type: String,
         default: "Medium",
@@ -56,6 +60,21 @@ customerSentiment: {
         type: String,
         default: "Open",
       },
+
+      messages: [
+  {
+    sender: String,
+    text: String,
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+],
+
+feedback: String,
+
+rating: Number,
       
 
       assignedAgent: {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import {
   FaTicketAlt,
   FaPlusCircle,
@@ -15,11 +16,53 @@ import {
 
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
-
+  const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [priority, setPriority] = useState("Medium");
+const [department, setDepartment] = useState("Technical");
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
   };
+  const createTicket = async () => {
+  try {
+    const token =
+      localStorage.getItem("token");
+
+    await axios.post(
+      "https://customer-support-ticket-bot.onrender.com/tickets",
+      {
+        title,
+        description,
+        priority,
+        department,
+      },
+      {
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert(
+      "Ticket Created Successfully"
+    );
+
+    setTitle("");
+    setDescription("");
+    setPriority("Medium");
+    setDepartment("Technical");
+
+    setActivePage("tickets");
+  } catch (error) {
+    alert(
+      "Failed to create ticket"
+    );
+  }
+};
+
+;
 
   return (
     <div className="customer-portal-layout">
@@ -82,6 +125,90 @@ const CustomerDashboard = () => {
       {/* Main Content */}
       <main className="customer-main">
         <div className="customer-page-shell">
+            {activePage === "create" && (
+  <section
+    className="customer-card"
+    style={{
+      marginBottom: "25px",
+    }}
+  >
+    <h2>Create Support Ticket</h2>
+
+    <input
+      type="text"
+      placeholder="Issue Title"
+      value={title}
+      onChange={(e) =>
+        setTitle(e.target.value)
+      }
+      style={{
+        width: "100%",
+        padding: "12px",
+        marginTop: "15px",
+        marginBottom: "15px",
+      }}
+    />
+
+    <textarea
+      placeholder="Describe your issue"
+      value={description}
+      onChange={(e) =>
+        setDescription(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        height: "150px",
+        padding: "12px",
+        marginBottom: "15px",
+      }}
+    />
+
+    <select
+      value={priority}
+      onChange={(e) =>
+        setPriority(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        padding: "12px",
+        marginBottom: "15px",
+      }}
+    >
+      <option>Low</option>
+      <option>Medium</option>
+      <option>High</option>
+    </select>
+
+    <select
+      value={department}
+      onChange={(e) =>
+        setDepartment(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        padding: "12px",
+        marginBottom: "15px",
+      }}
+    >
+      <option>Technical</option>
+      <option>Billing</option>
+      <option>Support</option>
+    </select>
+
+    <button
+      className="customer-primary-btn"
+      onClick={createTicket}
+    >
+      Submit Ticket
+    </button>
+  </section>
+)}
           {/* Top Bar */}
           <div className="customer-topbar">
             <div className="customer-search">
@@ -90,10 +217,15 @@ const CustomerDashboard = () => {
             </div>
 
             <div className="customer-topbar-actions">
-              <button className="customer-primary-btn">
-                <FaPlus />
-                Create Ticket
-              </button>
+              <button
+  className="customer-primary-btn"
+  onClick={() =>
+    setActivePage("create")
+  }
+>
+  <FaPlus />
+  Create Ticket
+</button>
 
               <div className="customer-profile-chip">
                 <div className="customer-profile-avatar">
@@ -249,10 +381,15 @@ const CustomerDashboard = () => {
                 you.
               </p>
 
-              <button className="customer-primary-btn customer-card-action">
-                <FaPlusCircle />
-                Create Ticket
-              </button>
+              <button
+  className="customer-primary-btn customer-card-action"
+  onClick={() =>
+    setActivePage("create")
+  }
+>
+  <FaPlusCircle />
+  Create Ticket
+</button>
             </section>
 
             <section className="customer-card">
