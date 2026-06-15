@@ -656,7 +656,7 @@ const CustomerDashboard = () => {
       <input
         type="file"
         accept="image/*"
-        onChange={uploadProfileImage}
+        onChange={(e) => console.log("file selected", e.target.files[0])}
       />
 
       <h3
