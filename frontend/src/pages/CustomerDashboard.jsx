@@ -241,6 +241,37 @@ const CustomerDashboard = () => {
   return (
     <>
       <style>{`
+      .upload-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.upload-btn:hover {
+  background: #1d4ed8;
+}
+
+.remove-photo-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #ef4444;
+  background: white;
+  color: #ef4444;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.remove-photo-btn:hover {
+  background: #fee2e2;
+}
       .tracking-line {
   width: 100%;
   height: 10px;
@@ -688,7 +719,8 @@ const CustomerDashboard = () => {
         style={{
           textAlign: "center",
           padding: "25px",
-          border: "1px solid #e5e7eb",
+          background: "#fff",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
           borderRadius: "15px",
         }}
       >
@@ -753,48 +785,83 @@ const CustomerDashboard = () => {
       </div>
 
       {/* RIGHT SIDE */}
+      <div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  }}
+>
+  {/* Customer Details */}
 
-      <div>
+  <div
+    style={{
+      background: "#fff",
+      padding: "25px",
+      borderRadius: "15px",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+    }}
+  >
+    <h3>👤 Customer Details</h3>
 
-        <h3>Customer Details</h3>
+    <p><strong>Name:</strong> {user?.name}</p>
+    <p><strong>Email:</strong> {user?.email}</p>
+    <p><strong>Phone:</strong> {user?.phone || "-"}</p>
+    <p><strong>Department:</strong> Customer</p>
+  </div>
+            
 
-        <p><strong>Name:</strong> {user?.name}</p>
-        <p><strong>Email:</strong> {user?.email}</p>
-        <p><strong>Contact:</strong> {user?.phone || "Not Available"}</p>
+  {/* Agent Details */}
 
-        <hr />
+  <div
+    style={{
+      background: "#fff",
+      padding: "25px",
+      borderRadius: "15px",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+    }}
+  >
+    <h3>🎧 Assigned Agent</h3>
 
-        <h3>Assigned Agent</h3>
+    <p>
+      <strong>Name:</strong>{" "}
+      {tickets[0]?.assignedAgent?.name || "Not Assigned"}
+    </p>
 
-        <p>
-          <strong>Name:</strong>{" "}
-          {tickets[0]?.assignedAgent?.name || "Not Assigned"}
-        </p>
+    <p>
+      <strong>Email:</strong>{" "}
+      {tickets[0]?.assignedAgent?.email || "-"}
+    </p>
 
-        <p>
-          <strong>Email:</strong>{" "}
-          {tickets[0]?.assignedAgent?.email || "-"}
-        </p>
+    <p>
+      <strong>Phone:</strong>{" "}
+      {tickets[0]?.assignedAgent?.phone || "-"}
+    </p>
 
-        <p>
-          <strong>Phone:</strong>{" "}
-          {tickets[0]?.assignedAgent?.phone || "-"}
-        </p>
+    <p>
+      <strong>Department:</strong>{" "}
+      {tickets[0]?.assignedAgent?.department || "-"}
+    </p>
+  </div>
+</div>
+            </div>
 
-        <p>
-          <strong>Department:</strong>{" "}
-          {tickets[0]?.assignedAgent?.department || "-"}
-        </p>
+      
 
-      </div>
-
-    </div>
+    
      <div
   style={{
     marginTop: "40px",
   }}
 >
-  <h3>Ticket Tracking</h3>
+ <h3
+  style={{
+    marginBottom: "20px",
+    fontSize: "24px",
+  }}
+>
+  📈 Ticket Tracking
+</h3>
 
   {tickets.map((ticket) => (
     <div
@@ -812,12 +879,35 @@ const CustomerDashboard = () => {
         {ticket.issue}
       </p>
 
-      <p>
-        <strong>Status:</strong>
-        {" "}
-        {ticket.status}
-      </p>
+     <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "10px",
+  }}
+>
+  <strong>{ticket.issue}</strong>
 
+  <span
+    style={{
+      background:
+        ticket.status === "Resolved"
+          ? "#dcfce7"
+          : "#dbeafe",
+      color:
+        ticket.status === "Resolved"
+          ? "#166534"
+          : "#1d4ed8",
+      padding: "5px 12px",
+      borderRadius: "20px",
+      fontSize: "12px",
+      fontWeight: "600",
+    }}
+  >
+    {ticket.status}
+  </span>
+</div>
       <p>
         <strong>Priority:</strong>
         {" "}
@@ -910,8 +1000,8 @@ const CustomerDashboard = () => {
       </div>
     </>
   );
-};
 
+}
 const SidebarItem = ({ text, icon, active, onClick }) => (
   <button type="button" onClick={onClick} className={`customer-sidebar-item ${active ? "active" : ""}`}>
     <span className="customer-sidebar-item-icon">{icon}</span>
