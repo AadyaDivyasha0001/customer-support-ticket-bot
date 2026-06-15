@@ -16,10 +16,14 @@ import {
 
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
-  const [title, setTitle] = useState("");
+ const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+const customerName =
+  user?.name || "";
+const [title, setTitle] = useState("");
 const [description, setDescription] = useState("");
-const [priority, setPriority] = useState("Medium");
-const [department, setDepartment] = useState("Technical");
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
@@ -28,15 +32,17 @@ const [department, setDepartment] = useState("Technical");
   try {
     const token =
       localStorage.getItem("token");
+      await axios.post(
+  "https://customer-support-ticket-bot.onrender.com/tickets",
+  {
+    customerName,
+    title,
+    issue,
+    description,
+    email
+  },
 
-    await axios.post(
-      "https://customer-support-ticket-bot.onrender.com/tickets",
-      {
-        title,
-        description,
-        priority,
-        department,
-      },
+    
       {
         headers: {
           Authorization:
@@ -45,21 +51,25 @@ const [department, setDepartment] = useState("Technical");
       }
     );
 
-    alert(
-      "Ticket Created Successfully"
-    );
+   toast.success(
+  "🎫 Ticket created successfully!"
+);
 
-    setTitle("");
-    setDescription("");
-    setPriority("Medium");
-    setDepartment("Technical");
+    setCustomerName("");
+setTitle("");
+setDescription("");
+
+   
 
     setActivePage("tickets");
   } catch (error) {
-    alert(
-      "Failed to create ticket"
-    );
-  }
+  console.log(error);
+
+  alert(
+    error.response?.data?.message ||
+    error.message
+  );
+}
 };
 
 ;
@@ -133,7 +143,20 @@ const [department, setDepartment] = useState("Technical");
     }}
   >
     <h2>Create Support Ticket</h2>
-
+     <input
+  type="text"
+  placeholder="Your Name"
+  value={customerName}
+  onChange={(e) =>
+    setCustomerName(e.target.value)
+  }
+  style={{
+    width: "100%",
+    padding: "12px",
+    marginTop: "15px",
+    marginBottom: "15px",
+  }}
+/>
     <input
       type="text"
       placeholder="Issue Title"
@@ -164,43 +187,6 @@ const [department, setDepartment] = useState("Technical");
         marginBottom: "15px",
       }}
     />
-
-    <select
-      value={priority}
-      onChange={(e) =>
-        setPriority(
-          e.target.value
-        )
-      }
-      style={{
-        width: "100%",
-        padding: "12px",
-        marginBottom: "15px",
-      }}
-    >
-      <option>Low</option>
-      <option>Medium</option>
-      <option>High</option>
-    </select>
-
-    <select
-      value={department}
-      onChange={(e) =>
-        setDepartment(
-          e.target.value
-        )
-      }
-      style={{
-        width: "100%",
-        padding: "12px",
-        marginBottom: "15px",
-      }}
-    >
-      <option>Technical</option>
-      <option>Billing</option>
-      <option>Support</option>
-    </select>
-
     <button
       className="customer-primary-btn"
       onClick={createTicket}

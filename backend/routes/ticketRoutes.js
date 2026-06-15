@@ -34,9 +34,10 @@ router.post(
     try {
         const {
   customerName,
-  email,
+  title,
   issue,
-  priority,
+  description,
+  email,
 } = req.body;
 
 // CUSTOMER NAME
@@ -85,16 +86,9 @@ if (
 }
 
 // PRIORITY
-if (
-  ![
-    "Low",
-    "Medium",
-    "High",
-    "Critical"
-  ].includes(
-    priority
-  )
-) {
+const ticketPriority =
+  priority || "Medium";
+ {
   return res
     .status(400)
     .json({
@@ -139,8 +133,7 @@ if (existingTicket) {
      department:
       "Pending AI Analysis",
 
-    priority:
-       priority,
+    priority: ticketPriority,
 
     assignedAgent: null,
     activityLogs: [
@@ -785,25 +778,6 @@ Support Team`
         error
       );
 
-      res.status(500).json({
-        message:
-          error.message,
-      });
-    }
-  }
-);
-
-router.post(
-  "/",
-  async (req, res) => {
-    try {
-      const ticket =
-        await Ticket.create(
-          req.body
-        );
-
-      res.json(ticket);
-    } catch (error) {
       res.status(500).json({
         message:
           error.message,
