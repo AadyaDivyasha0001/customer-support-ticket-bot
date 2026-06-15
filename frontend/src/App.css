@@ -4316,3 +4316,27 @@ cursor:pointer;
 .auth-primary-btn:hover{
   background:#1d4ed8;
 }
+.agent-card {
+  background: #1e293b;
+  color: white;
+}
+
+.agent-card h2 {
+  color: #ffffff;
+}
+
+.agent-info p {
+  color: #cbd5e1;
+}
+
+.agent-info strong {
+  color: #f8fafc;
+}
+
+.status-online {
+  color: #22c55e;
+}
+
+.status-busy {
+  color: #ef4444;
+}
