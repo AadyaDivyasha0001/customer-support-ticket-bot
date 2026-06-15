@@ -85,16 +85,7 @@ if (
 }
 
 // PRIORITY
-const ticketPriority =
-  priority || "Medium";
- {
-  return res
-    .status(400)
-    .json({
-      message:
-        "Invalid priority selected",
-    });
-}
+const ticketPriority = "Medium";
       // AUTO ASSIGN AGENT
       // AUTO ASSIGN AGENT FROM DATABASE
 
