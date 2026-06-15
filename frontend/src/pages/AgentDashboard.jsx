@@ -851,8 +851,287 @@ Select a customer chat
 
 </div>
 )}
+{activePage === "profile" && (
+  <section className="agent-card">
+
+    <h2>My Profile</h2>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "300px 1fr",
+        gap: "30px",
+        marginTop: "25px",
+      }}
+    >
+
+      {/* LEFT PROFILE CARD */}
+
+      <div
+        style={{
+          textAlign: "center",
+          padding: "25px",
+          background: "#fff",
+          borderRadius: "15px",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+        }}
+      >
+
+        <img
+          src={`https://ui-avatars.com/api/?name=Support+Agent`}
+          alt="Agent"
+          style={{
+            width: "160px",
+            height: "160px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: "4px solid #2563eb",
+          }}
+        />
+
+        <h3 style={{ marginTop: "20px" }}>
+          Support Agent
+        </h3>
+
+        <p
+          style={{
+            color: "#64748b",
+            marginBottom: "15px",
+          }}
+        >
+          support@company.com
+        </p>
+
+        <span
+          style={{
+            background: "#dcfce7",
+            color: "#166534",
+            padding: "8px 16px",
+            borderRadius: "20px",
+            fontSize: "13px",
+            fontWeight: "600",
+          }}
+        >
+          Active Agent
+        </span>
+
+      </div>
+
+      {/* RIGHT SECTION */}
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+
+        {/* Agent Details */}
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+
+          <h3>👤 Agent Details</h3>
+
+          <p>
+            <strong>Name:</strong> Support Agent
+          </p>
+
+          <p>
+            <strong>Email:</strong> support@company.com
+          </p>
+
+          <p>
+            <strong>Phone:</strong> +91 9876543210
+          </p>
+
+          <p>
+            <strong>Department:</strong> Customer Support
+          </p>
+
+          <p>
+            <strong>Employee ID:</strong> AGT001
+          </p>
+
+          <p>
+            <strong>Role:</strong> Support Executive
+          </p>
+
+          <p>
+            <strong>Joined:</strong> Jan 2026
+          </p>
+
+        </div>
+
+        {/* Performance Overview */}
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+
+          <h3>📊 Performance Overview</h3>
+
+          <p>
+            <strong>Total Tickets Handled:</strong> 248
+          </p>
+
+          <p>
+            <strong>Resolved Tickets:</strong> 220
+          </p>
+
+          <p>
+            <strong>Pending Tickets:</strong> 18
+          </p>
+
+          <p>
+            <strong>Open Tickets:</strong> 10
+          </p>
+
+          <p>
+            <strong>Average Response Time:</strong> 12 mins
+          </p>
+
+          <p>
+            <strong>Customer Satisfaction:</strong> 94%
+          </p>
+
+          <p>
+            <strong>Rating:</strong> ⭐ 4.8 / 5
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {/* TICKET STATISTICS */}
+
+    <div
+      style={{
+        marginTop: "40px",
+      }}
+    >
+
+      <h3
+        style={{
+          marginBottom: "20px",
+          fontSize: "24px",
+        }}
+      >
+        📈 Ticket Statistics
+      </h3>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit,minmax(220px,1fr))",
+          gap: "20px",
+        }}
+      >
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            textAlign: "center",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+          <FaTicketAlt
+            style={{
+              fontSize: "30px",
+              color: "#2563eb",
+              marginBottom: "10px",
+            }}
+          />
+          <h2>248</h2>
+          <p>Total Tickets</p>
+        </div>
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            textAlign: "center",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+          <FaCheckCircle
+            style={{
+              fontSize: "30px",
+              color: "#16a34a",
+              marginBottom: "10px",
+            }}
+          />
+          <h2>220</h2>
+          <p>Resolved</p>
+        </div>
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            textAlign: "center",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+          <FaClock
+            style={{
+              fontSize: "30px",
+              color: "#f59e0b",
+              marginBottom: "10px",
+            }}
+          />
+          <h2>18</h2>
+          <p>Pending</p>
+        </div>
+
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            textAlign: "center",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+          <FaUser
+            style={{
+              fontSize: "30px",
+              color: "#9333ea",
+              marginBottom: "10px",
+            }}
+          />
+          <h2>94%</h2>
+          <p>Customer Satisfaction</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+)}
 {activePage !== "dashboard" &&
- activePage !== "messages" && (
+ activePage !== "messages" &&
+ activePage !=="profile" && (
   <section className="agent-card">
     <h3>
       {activePage.charAt(0).toUpperCase() +
