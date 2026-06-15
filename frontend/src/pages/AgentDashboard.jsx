@@ -31,6 +31,13 @@ const [profileImage, setProfileImage] =
   );
 const messagesEndRef = useRef(null);
 
+const departmentTickets =
+  departmentTickets.filter(
+    (ticket) =>
+      ticket.department ===
+      agent?.department
+  );
+
 const API =
   "https://customer-support-ticket-bot.onrender.com";
   const logout = () => {
@@ -129,12 +136,12 @@ useEffect(() => {
 }, [selectedTicket]);
 const loadTickets = async () => {
   try {
-    const token =
+     const token =
       localStorage.getItem("token");
 
     const res = await axios.get(
       `${API}/tickets`,
-      {
+    {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -149,6 +156,11 @@ const loadTickets = async () => {
 useEffect(() => {
   loadTickets();
 }, []);
+ useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [messages]);
 
   const DashboardContent = () => (
     <>
@@ -839,7 +851,7 @@ color:#64748b;
                 <div className="agent-profile-chip">
                   <div className="agent-profile-avatar"><FaUser /></div>
                   <div>
-                    <strong>Support Agent</strong>
+                    <strong>{agent?.name}</strong>
                     <span>Agent Workspace</span>
                   </div>
                 </div>
@@ -862,7 +874,7 @@ color:#64748b;
 
 <div className="agent-chat-sidebar">
 
-{tickets.map((ticket)=>(
+{departmentTickets.map((ticket)=>(
 
 <div
 key={ticket._id}
@@ -1039,7 +1051,7 @@ Select a customer chat
 
         <tbody>
 
-          {tickets.map((ticket) => (
+          {departmentTickets.map((ticket) => (
 
             <tr key={ticket._id}>
 
@@ -1220,7 +1232,7 @@ Select a customer chat
        <img
   src={
     profileImage ||
-    "https://ui-avatars.com/api/?name=${agent?.name}"
+    'https://ui-avatars.com/api/?name=${agent?.name}'
   }
   alt="Agent"
   style={{
@@ -1311,7 +1323,7 @@ Select a customer chat
           <h3>👤 Agent Details</h3>
 
           <p>
-            <strong>Name:</strong> {agent?.email}
+            <strong>Name:</strong> {agent?.name}
           </p>
 
           <p>

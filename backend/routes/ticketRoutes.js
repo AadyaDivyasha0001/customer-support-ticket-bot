@@ -934,6 +934,24 @@ router.post(
     }
   }
 );
+router.get(
+  "/department/:department",
+  async (req, res) => {
+    try {
+
+      const tickets =
+        await Ticket.find({
+          department:
+            req.params.department,
+        });
+
+      res.json(tickets);
+
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+);
    
 module.exports =
   router;

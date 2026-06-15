@@ -49,6 +49,7 @@ description: String,
  department: {
   type: String,
   default: "Support",
+  required: true,
 },
 
 customerSentiment: {
