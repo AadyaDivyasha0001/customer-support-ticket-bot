@@ -13,13 +13,6 @@ import Login from "./pages/Login";
 import WelcomeScreen from "./components/WelcomeScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  FaTicketAlt,
-  FaHeadset,
-  FaEnvelope,
-  FaRobot,
-  FaComments,
-} from "react-icons/fa";
 
 function App() {
   const [activePage, setActivePage] =
