@@ -241,6 +241,50 @@ const CustomerDashboard = () => {
   return (
     <>
       <style>{`
+      .tracking-line {
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.tracking-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #60a5fa
+  );
+}
+         .upload-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.upload-btn:hover {
+  background: #1d4ed8;
+}
+
+.remove-photo-btn {
+  display: block;
+  margin: 12px auto;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #ef4444;
+  color: white;
+  cursor: pointer;
+}
+
+.remove-photo-btn:hover {
+  background: #dc2626;
+}
         .chat-page {
           display: flex;
           height: 640px;
@@ -381,7 +425,9 @@ const CustomerDashboard = () => {
         .chat-send-btn:hover { background: #1da851; }
         .chat-send-btn:disabled { background: #b2dfdb; cursor: not-allowed; }
         .chat-no-tickets { padding: 32px 16px; text-align: center; color: #8696a0; font-size: 13px; }
-      `}</style>
+      `}
+      
+      </style>
 
       <div className="customer-portal-layout">
         <ToastContainer />
@@ -663,10 +709,17 @@ const CustomerDashboard = () => {
         />
 
         <br /><br />
-
+        <label
+         htmlFor="profile-upload"
+            className="upload-btn"
+>
+             Upload Profile Picture
+     </label>
         <input
+           id="profile-upload"
           type="file"
           accept="image/*"
+           style={{ display: "none" }}
           onChange={(e) => {
             const file = e.target.files[0];
 
@@ -723,10 +776,7 @@ const CustomerDashboard = () => {
       </div>
 
     </div>
-
-  </section>
-)}
-<div
+     <div
   style={{
     marginTop: "40px",
   }}
@@ -760,24 +810,40 @@ const CustomerDashboard = () => {
         {" "}
         {ticket.priority}
       </p>
+      <div className="tracking-line">
+  <div
+    className="tracking-fill"
+    style={{
+      width:
+        ticket.status === "Resolved"
+          ? "100%"
+          : ticket.status === "In Progress"
+          ? "65%"
+          : "25%",
+    }}
+  />
+</div>
 
-      <progress
-        value={
-          ticket.status === "Resolved"
-            ? 100
-            : ticket.status === "In Progress"
-            ? 60
-            : 20
-        }
-        max="100"
-        style={{
-          width: "100%",
-          height: "12px",
-        }}
-      />
+     
     </div>
   ))}
 </div>
+
+  </section>
+)}
+<button
+  className="remove-photo-btn"
+  onClick={() => {
+    setProfileImage("");
+
+    localStorage.removeItem(
+      "profileImage"
+    );
+  }}
+>
+  Remove Picture
+</button>
+
 
 
 
