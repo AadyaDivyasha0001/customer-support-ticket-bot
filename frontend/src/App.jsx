@@ -69,30 +69,6 @@ if (role === "Agent") {
 
   return (
     <>
-      {/* Floating Background Icons */}
-      <div className="floating-bg">
-
-        <FaTicketAlt
-          className="float-icon icon1"
-        />
-
-        <FaHeadset
-          className="float-icon icon2"
-        />
-
-        <FaEnvelope
-          className="float-icon icon3"
-        />
-
-        <FaRobot
-          className="float-icon icon4"
-        />
-
-        <FaComments
-          className="float-icon icon5"
-        />
-
-      </div>
 
       {/* Main Layout */}
       <div className="app-layout">
