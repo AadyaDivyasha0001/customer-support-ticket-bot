@@ -731,7 +731,20 @@ const CustomerDashboard = () => {
 
             uploadProfileImage(e);
           }}
+          
         />
+        <button
+  className="remove-photo-btn"
+  onClick={() => {
+    setProfileImage("");
+
+    localStorage.removeItem(
+      "profileImage"
+    );
+  }}
+>
+  Remove Picture
+</button>
 
         <h3>{user?.name}</h3>
 
@@ -831,18 +844,7 @@ const CustomerDashboard = () => {
 
   </section>
 )}
-<button
-  className="remove-photo-btn"
-  onClick={() => {
-    setProfileImage("");
 
-    localStorage.removeItem(
-      "profileImage"
-    );
-  }}
->
-  Remove Picture
-</button>
 
 
 
