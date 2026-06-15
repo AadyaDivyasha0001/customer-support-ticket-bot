@@ -22,7 +22,10 @@ const AgentDashboard = () => {
 const [selectedTicket, setSelectedTicket] = useState(null);
 const [messages, setMessages] = useState([]);
 const [replyText, setReplyText] = useState("");
-
+const [profileImage, setProfileImage] =
+  useState(
+    localStorage.getItem("agentProfileImage") || ""
+  );
 const messagesEndRef = useRef(null);
 
 const API =
@@ -53,6 +56,21 @@ const API =
   } catch (err) {
     console.log(err);
   }
+};
+const uploadProfileImage = (e) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  const imageUrl =
+    URL.createObjectURL(file);
+
+  setProfileImage(imageUrl);
+
+  localStorage.setItem(
+    "agentProfileImage",
+    imageUrl
+  );
 };
 
 const openChat = (ticket) => {
@@ -239,7 +257,26 @@ useEffect(() => {
   return (
     <>
       <style>{`
+.agent-profile-card,
+.agent-profile-details,
+.agent-performance-card,
+.agent-stats-card{
+  color:#1e293b;
+}
 
+.agent-profile-card p,
+.agent-profile-details p,
+.agent-performance-card p,
+.agent-stats-card p{
+  color:#475569;
+}
+
+.agent-profile-card h2,
+.agent-profile-card h3,
+.agent-profile-details h3,
+.agent-performance-card h3{
+  color:#0f172a;
+}
 .agent-chat-page{
   display:flex;
   height:640px;
@@ -356,7 +393,37 @@ useEffect(() => {
   cursor:pointer;
   font-weight:600;
 }
+ .agent-upload-btn{
+  display:inline-block;
+  padding:12px 20px;
+  background:#2563eb;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  margin-top:12px;
+}
 
+.agent-upload-btn:hover{
+  background:#1d4ed8;
+}
+
+.agent-remove-btn{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#ef4444;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.agent-remove-btn:hover{
+  background:#dc2626;
+}
 
 
 
@@ -876,19 +943,49 @@ Select a customer chat
           boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
         }}
       >
+       <img
+  src={
+    profileImage ||
+    "https://ui-avatars.com/api/?name=Support+Agent"
+  }
+  alt="Agent"
+  style={{
+    width:"160px",
+    height:"160px",
+    borderRadius:"50%",
+    objectFit:"cover",
+    border:"4px solid #2563eb"
+  }}
+/>
+<br />
+<br />
 
-        <img
-          src={`https://ui-avatars.com/api/?name=Support+Agent`}
-          alt="Agent"
-          style={{
-            width: "160px",
-            height: "160px",
-            borderRadius: "50%",
-            objectFit: "cover",
-            border: "4px solid #2563eb",
-          }}
-        />
+<label
+  htmlFor="agent-profile-upload"
+  className="agent-upload-btn"
+>
+  Upload Profile Picture
+</label>
 
+<input
+  id="agent-profile-upload"
+  type="file"
+  accept="image/*"
+  style={{ display:"none" }}
+  onChange={uploadProfileImage}
+/>
+   <button
+  className="agent-remove-btn"
+  onClick={() => {
+    setProfileImage("");
+    localStorage.removeItem(
+      "agentProfileImage"
+    );
+  }}
+>
+  Remove Picture
+</button>    
+          
         <h3 style={{ marginTop: "20px" }}>
           Support Agent
         </h3>
