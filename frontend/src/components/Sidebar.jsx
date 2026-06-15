@@ -7,7 +7,6 @@ import {
   FaChartBar,
   FaSignOutAlt,
   FaHeadset,
-  FaPlus,
 } from "react-icons/fa";
 
 
@@ -85,30 +84,7 @@ function Sidebar({ activePage, setActivePage }) {
       </ul>
 
       {/* Quick Actions */}
-<div className="quick-actions">
-  <h4>Quick Actions</h4>
 
-  <button
-    onClick={() => setActivePage("tickets")}
-  >
-    <FaPlus />
-    Create Ticket
-  </button>
-
-  <button
-    onClick={() => setActivePage("customers")}
-  >
-    <FaPlus />
-    Add Customer
-  </button>
-
-  <button
-    onClick={() => setActivePage("agents")}
-  >
-    <FaPlus />
-    Add Agent
-  </button>
-</div>
 
       {/* Help Card */}
       <div className="help-card">
