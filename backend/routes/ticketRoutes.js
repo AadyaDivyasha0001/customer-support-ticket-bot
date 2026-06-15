@@ -251,8 +251,6 @@ Support Team`
     );
   }
 })();
- 
-    res.status(201).json(savedTicket);
 
 } catch (error) {
   res.status(500).json({
@@ -810,6 +808,63 @@ router.get(
       res.json(
         ticket.conversationHistory
       );
+
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+);
+router.post(
+  "/:id/messages",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const {
+        sender,
+        senderName,
+        message,
+      } = req.body;
+
+      const ticket =
+        await Ticket.findById(
+          req.params.id
+        );
+
+      if (!ticket) {
+        return res.status(404).json({
+          message: "Ticket not found",
+        });
+      }
+
+      ticket.conversationHistory.push({
+        sender,
+        senderName,
+        message,
+        timestamp: new Date(),
+      });
+
+      await ticket.save();
+
+      const updatedTicket =
+        await Ticket.findById(
+          ticket._id
+        ).populate(
+          "assignedAgent"
+        );
+
+      const io =
+        req.app.get("io");
+
+      io.emit(
+        "ticketUpdated",
+        updatedTicket
+      );
+
+      res.json({
+        success: true,
+      });
 
     } catch (error) {
       res.status(500).json({
