@@ -797,6 +797,27 @@ router.get(
     }
   }
 );
+router.get(
+  "/:id/messages",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const ticket =
+        await Ticket.findById(
+          req.params.id
+        );
+
+      res.json(
+        ticket.conversationHistory
+      );
+
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+);
    
 module.exports =
   router;
