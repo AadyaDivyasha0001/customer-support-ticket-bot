@@ -39,7 +39,7 @@ const [description, setDescription] = useState("");
     title,
     issue,
     description,
-    email
+    email,
   },
 
     
