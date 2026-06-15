@@ -19,6 +19,7 @@ const CustomerDashboard = () => {
  const user = JSON.parse(
   localStorage.getItem("user")
 );
+console.log(user);
 
 const customerName =
   user?.name || "";
@@ -61,7 +62,7 @@ const email = user?.email;
   "🎫 Ticket created successfully!"
 );
 
-    setCustomerName("");
+   
 setTitle("");
 setDescription("");
 
@@ -149,20 +150,6 @@ setDescription("");
     }}
   >
     <h2>Create Support Ticket</h2>
-     <input
-  type="text"
-  placeholder="Your Name"
-  value={customerName}
-  onChange={(e) =>
-    setCustomerName(e.target.value)
-  }
-  style={{
-    width: "100%",
-    padding: "12px",
-    marginTop: "15px",
-    marginBottom: "15px",
-  }}
-/>
     <input
       type="text"
       placeholder="Issue Title"
