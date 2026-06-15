@@ -32,6 +32,11 @@ const [description, setDescription] = useState("");
   try {
     const token =
       localStorage.getItem("token");
+      const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+const email = user?.email;
       await axios.post(
   "https://customer-support-ticket-bot.onrender.com/tickets",
   {
