@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {
-  FaTicketAlt,
-  FaHeadset,
-  FaRobot,
-  FaEnvelope,
-  FaChartLine,
-} from "react-icons/fa";
-
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -151,14 +143,14 @@ const [role, setRole] = useState("Customer");
         >
           Register
         </button>
-
         <button
   type="button"
   className="auth-secondary-btn"
-  onClick={() => setIsLogin(true)}
+  onClick={() => window.location.href = "/"}
 >
   Back to Login
 </button>
+        
       </div>
     </div>
   );

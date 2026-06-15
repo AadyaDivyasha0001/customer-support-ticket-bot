@@ -2,14 +2,6 @@ import Register from "./Register";
 import React, {
   useState,
 } from "react";
-import {
-  FaTicketAlt,
-  FaHeadset,
-  FaRobot,
-  FaEnvelope,
-  FaChartLine,
-} from "react-icons/fa";
-
 import axios from "axios";
 
 const Login = () => {
@@ -173,11 +165,10 @@ return (
       >
         Login
       </button>
-
-     <button
+<button
   type="button"
   className="auth-secondary-btn"
-  onClick={() => setIsLogin(false)}
+  onClick={() => setShowRegister(true)}
 >
   Create New Account
 </button>
