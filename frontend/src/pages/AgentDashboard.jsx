@@ -435,7 +435,51 @@ useEffect(() => {
 .agent-remove-btn:hover{
   background:#dc2626;
 }
+ .agent-performance-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+margin-top:20px;
+}
 
+.agent-performance-box{
+background:#f8fafc;
+padding:20px;
+border-radius:12px;
+border:1px solid #e2e8f0;
+}
+
+.agent-performance-box h4{
+margin-bottom:15px;
+color:#334155;
+}
+
+.performance-value{
+font-size:28px;
+font-weight:700;
+color:#1e293b;
+margin-bottom:15px;
+}
+
+.performance-bar{
+height:10px;
+background:#e2e8f0;
+border-radius:999px;
+overflow:hidden;
+}
+
+.performance-fill{
+height:100%;
+border-radius:999px;
+}
+
+.performance-fill.green{
+background:#22c55e;
+}
+
+.performance-fill.blue{
+background:#2563eb;
+}
 
 
 
@@ -924,6 +968,7 @@ Select a customer chat
 </div>
 )}
 {activePage === "profile" && (
+    
   <section className="agent-card">
 
     <h2>My Profile</h2>
@@ -1230,19 +1275,152 @@ Select a customer chat
 
   </section>
 )}
-{activePage !== "dashboard" &&
- activePage !== "messages" &&
- activePage !=="profile" && (
-  <section className="agent-card">
-    <h3>
-      {activePage.charAt(0).toUpperCase() +
-       activePage.slice(1)} Channel
-    </h3>
+    {activePage === "performance" && (
+  <>
+    <div className="agent-stats-grid">
 
-    <p>
-      This interface view module is currently rendering active data buffers.
-    </p>
-  </section>
+      <div className="agent-stat-card">
+        <div className="agent-stat-icon blue">
+          <FaTicketAlt />
+        </div>
+        <div>
+          <h3>Total Tickets</h3>
+          <h2>248</h2>
+          <p>Handled this year</p>
+        </div>
+      </div>
+
+      <div className="agent-stat-card">
+        <div className="agent-stat-icon green">
+          <FaCheckCircle />
+        </div>
+        <div>
+          <h3>Resolved</h3>
+          <h2>220</h2>
+          <p>Successfully closed</p>
+        </div>
+      </div>
+
+      <div className="agent-stat-card">
+        <div className="agent-stat-icon orange">
+          <FaClock />
+        </div>
+        <div>
+          <h3>Avg Response</h3>
+          <h2>12m</h2>
+          <p>Average response time</p>
+        </div>
+      </div>
+
+      <div className="agent-stat-card">
+        <div className="agent-stat-icon purple">
+          <FaUser />
+        </div>
+        <div>
+          <h3>CSAT Score</h3>
+          <h2>94%</h2>
+          <p>Customer satisfaction</p>
+        </div>
+      </div>
+
+    </div>
+
+    <section className="agent-card">
+      <h3>📊 Performance Overview</h3>
+
+      <div className="agent-performance-grid">
+
+        <div className="agent-performance-box">
+          <h4>Resolution Rate</h4>
+          <div className="performance-value">89%</div>
+
+          <div className="performance-bar">
+            <div
+              className="performance-fill green"
+              style={{ width: "89%" }}
+            />
+          </div>
+        </div>
+
+        <div className="agent-performance-box">
+          <h4>Response Efficiency</h4>
+          <div className="performance-value">92%</div>
+
+          <div className="performance-bar">
+            <div
+              className="performance-fill blue"
+              style={{ width: "92%" }}
+            />
+          </div>
+        </div>
+
+        <div className="agent-performance-box">
+          <h4>Customer Rating</h4>
+          <div className="performance-value">
+            ⭐ 4.8 / 5
+          </div>
+        </div>
+
+        <div className="agent-performance-box">
+          <h4>Pending Workload</h4>
+          <div className="performance-value">
+            18 Tickets
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section className="agent-card">
+      <h3>📅 Monthly Performance</h3>
+
+      <table className="agent-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Handled</th>
+            <th>Resolved</th>
+            <th>Response Time</th>
+            <th>CSAT</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Jan</td>
+            <td>42</td>
+            <td>39</td>
+            <td>13 min</td>
+            <td>93%</td>
+          </tr>
+
+          <tr>
+            <td>Feb</td>
+            <td>38</td>
+            <td>35</td>
+            <td>11 min</td>
+            <td>95%</td>
+          </tr>
+
+          <tr>
+            <td>Mar</td>
+            <td>44</td>
+            <td>41</td>
+            <td>12 min</td>
+            <td>94%</td>
+          </tr>
+
+          <tr>
+            <td>Apr</td>
+            <td>51</td>
+            <td>47</td>
+            <td>10 min</td>
+            <td>96%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </>
 )}
             
           </div>
