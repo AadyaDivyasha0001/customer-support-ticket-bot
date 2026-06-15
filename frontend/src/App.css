@@ -2265,9 +2265,7 @@ body {
 body::before,
 .workflow-lines,
 .background-animation,
-.floating-bg {
-  display: none !important;
-}
+
 
 /* App shell */
 
@@ -4283,4 +4281,38 @@ cursor:pointer;
   .customer-stats-grid {
     grid-template-columns: 1fr;
   }
+}
+.auth-secondary-btn{
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:12px;
+  background:transparent;
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.auth-secondary-btn:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:#3b82f6;
+}
+.auth-primary-btn{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.auth-primary-btn:hover{
+  background:#1d4ed8;
 }

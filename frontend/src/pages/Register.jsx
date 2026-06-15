@@ -70,50 +70,7 @@ const [role, setRole] = useState("Customer");
     <div className="auth-page">
 
       {/* Floating Icons */}
-      <FaTicketAlt
-        className="floating-icon"
-        style={{
-          left: "10%",
-          fontSize: "45px",
-          animationDelay: "0s",
-        }}
-      />
-
-      <FaHeadset
-        className="floating-icon"
-        style={{
-          left: "25%",
-          fontSize: "55px",
-          animationDelay: "2s",
-        }}
-      />
-
-      <FaRobot
-        className="floating-icon"
-        style={{
-          left: "45%",
-          fontSize: "65px",
-          animationDelay: "4s",
-        }}
-      />
-
-      <FaEnvelope
-        className="floating-icon"
-        style={{
-          left: "70%",
-          fontSize: "50px",
-          animationDelay: "6s",
-        }}
-      />
-
-      <FaChartLine
-        className="floating-icon"
-        style={{
-          left: "90%",
-          fontSize: "55px",
-          animationDelay: "8s",
-        }}
-      />
+      
 
       {/* Register Card */}
       <div className="auth-card">
@@ -190,20 +147,18 @@ const [role, setRole] = useState("Customer");
 
         <button
           onClick={handleRegister}
-          className="auth-btn"
+          className="auth-primary-btn"
         >
           Register
         </button>
 
-        <p
-          className="register-link"
-          onClick={() =>
-            window.location.reload()
-          }
-        >
-          Back to Login
-        </p>
-
+        <button
+  type="button"
+  className="auth-secondary-btn"
+  onClick={() => setIsLogin(true)}
+>
+  Back to Login
+</button>
       </div>
     </div>
   );
