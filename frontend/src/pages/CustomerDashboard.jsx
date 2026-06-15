@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,74 +18,85 @@ import {
 
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
-  const [customerName, setCustomerName] = useState("");
- const user = JSON.parse(
-  localStorage.getItem("user")
-);
 
-const customerName =
-  user?.name || "";
-const [title, setTitle] = useState("");
-const [description, setDescription] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [customerName, setCustomerName] = useState(user?.name || "");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tickets, setTickets] = useState([]);
+
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
   };
+
+  const loadTickets = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const response = await axios.get(
+        `https://customer-support-ticket-bot.onrender.com/tickets/customer/${user.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setTickets(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadTickets();
+  }, []);
+
   const createTicket = async () => {
-  try {
-    const token =
-      localStorage.getItem("token");
-      const user = JSON.parse(
-  localStorage.getItem("user")
-);
-console.log(user);
+    try {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
 
-const email = user?.email;
       await axios.post(
-  "https://customer-support-ticket-bot.onrender.com/tickets",
-  {
-    
-  customerName: user.name,
-  email: user.email,
-  issue: description,
-  description,
-
-  },
-
-    
-      {
-        headers: {
-          Authorization:
-            `Bearer ${token}`,
+        "https://customer-support-ticket-bot.onrender.com/tickets",
+        {
+          customerName: customerName,
+          email: user.email,
+          title: title,
+          issue: description,
+          description: description,
         },
-      }
-    );
-<ToastContainer>
-   toast.success(
-  "🎫 Ticket created successfully!"
-);
-</ToastContainer>
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    setCustomerName("");
-setTitle("");
-setDescription("");
+      toast.success("🎫 Ticket created successfully!");
 
-   
+      setCustomerName(user?.name || "");
+      setTitle("");
+      setDescription("");
 
-    setActivePage("tickets");
-  } catch (error) {
-  console.log(error);
-alert(
-    error.response?.data?.message ||
-    error.message
-  );
-}
-};
+      await loadTickets();
 
-;
+      setActivePage("tickets");
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error.response?.data?.message || "Failed to create ticket"
+      );
+    }
+  };
 
   return (
     <div className="customer-portal-layout">
+      <ToastContainer />
+
       {/* Sidebar */}
       <aside className="customer-sidebar">
         <div className="customer-sidebar-brand">
@@ -118,7 +129,10 @@ alert(
             text="My Tickets"
             icon={<FaTicketAlt />}
             active={activePage === "tickets"}
-            onClick={() => setActivePage("tickets")}
+            onClick={() => {
+              loadTickets();
+              setActivePage("tickets");
+            }}
           />
 
           <SidebarItem
@@ -145,66 +159,7 @@ alert(
       {/* Main Content */}
       <main className="customer-main">
         <div className="customer-page-shell">
-            {activePage === "create" && (
-  <section
-    className="customer-card"
-    style={{
-      marginBottom: "25px",
-    }}
-  >
-    <h2>Create Support Ticket</h2>
-     <input
-  type="text"
-  placeholder="Your Name"
-  value={customerName}
-  onChange={(e) =>
-    setCustomerName(e.target.value)
-  }
-  style={{
-    width: "100%",
-    padding: "12px",
-    marginTop: "15px",
-    marginBottom: "15px",
-  }}
-/>
-    <input
-      type="text"
-      placeholder="Issue Title"
-      value={title}
-      onChange={(e) =>
-        setTitle(e.target.value)
-      }
-      style={{
-        width: "100%",
-        padding: "12px",
-        marginTop: "15px",
-        marginBottom: "15px",
-      }}
-    />
 
-    <textarea
-      placeholder="Describe your issue"
-      value={description}
-      onChange={(e) =>
-        setDescription(
-          e.target.value
-        )
-      }
-      style={{
-        width: "100%",
-        height: "150px",
-        padding: "12px",
-        marginBottom: "15px",
-      }}
-    />
-    <button
-      className="customer-primary-btn"
-      onClick={createTicket}
-    >
-      Submit Ticket
-    </button>
-  </section>
-)}
           {/* Top Bar */}
           <div className="customer-topbar">
             <div className="customer-search">
@@ -214,14 +169,12 @@ alert(
 
             <div className="customer-topbar-actions">
               <button
-  className="customer-primary-btn"
-  onClick={() =>
-    setActivePage("create")
-  }
->
-  <FaPlus />
-  Create Ticket
-</button>
+                className="customer-primary-btn"
+                onClick={() => setActivePage("create")}
+              >
+                <FaPlus />
+                Create Ticket
+              </button>
 
               <div className="customer-profile-chip">
                 <div className="customer-profile-avatar">
@@ -261,158 +214,216 @@ alert(
             </div>
           </div>
 
-          {/* Cards */}
-          <div className="customer-stats-grid">
-            <StatCard
-              title="Total Tickets"
-              value="15"
-              icon={<FaTicketAlt />}
-              tone="blue"
-              helper="All requests submitted"
-            />
+          {/* Create Ticket Page */}
+          {activePage === "create" && (
+            <section className="customer-card" style={{ marginBottom: "25px" }}>
+              <h2>Create Support Ticket</h2>
 
-            <StatCard
-              title="Open Tickets"
-              value="4"
-              icon={<FaClock />}
-              tone="orange"
-              helper="Waiting for resolution"
-            />
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  marginTop: "15px",
+                  marginBottom: "15px",
+                }}
+              />
 
-            <StatCard
-              title="Resolved"
-              value="9"
-              icon={<FaCheckCircle />}
-              tone="green"
-              helper="Successfully completed"
-            />
+              <input
+                type="text"
+                placeholder="Issue Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  marginTop: "15px",
+                  marginBottom: "15px",
+                }}
+              />
 
-            <StatCard
-              title="Messages"
-              value="6"
-              icon={<FaComments />}
-              tone="purple"
-              helper="Support conversations"
-            />
-          </div>
+              <textarea
+                placeholder="Describe your issue"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                style={{
+                  width: "100%",
+                  height: "150px",
+                  padding: "12px",
+                  marginBottom: "15px",
+                }}
+              />
 
-          {/* Ticket Table */}
-          <section className="customer-card customer-ticket-card">
-            <div className="customer-card-header">
-              <div>
-                <h3>Recent Tickets</h3>
-                <p>Your latest support requests and current status.</p>
-              </div>
+              <button className="customer-primary-btn" onClick={createTicket}>
+                Submit Ticket
+              </button>
+            </section>
+          )}
 
-              <button className="customer-secondary-btn">View All</button>
-            </div>
+          {/* My Tickets Page */}
+          {activePage === "tickets" && (
+            <section className="customer-card">
+              <h2>My Tickets</h2>
 
-            <div className="customer-table-wrapper">
               <table className="customer-table">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Issue</th>
-                    <th>Priority</th>
                     <th>Status</th>
+                    <th>Agent</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <tr>
-                    <td>
-                      <strong>T001</strong>
-                    </td>
-                    <td>Payment Failed</td>
-                    <td>
-                      <span className="customer-badge danger">High</span>
-                    </td>
-                    <td>
-                      <span className="customer-badge open">Open</span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <strong>T002</strong>
-                    </td>
-                    <td>Login Issue</td>
-                    <td>
-                      <span className="customer-badge warning">Medium</span>
-                    </td>
-                    <td>
-                      <span className="customer-badge success">Resolved</span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <strong>T003</strong>
-                    </td>
-                    <td>Account Update</td>
-                    <td>
-                      <span className="customer-badge neutral">Low</span>
-                    </td>
-                    <td>
-                      <span className="customer-badge progress">
-                        In Progress
-                      </span>
-                    </td>
-                  </tr>
+                  {tickets.map((ticket) => (
+                    <tr key={ticket._id}>
+                      <td>{ticket._id.slice(-5)}</td>
+                      <td>{ticket.issue}</td>
+                      <td>{ticket.status}</td>
+                      <td>{ticket.assignedAgent?.name || "Pending"}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
-            </div>
-          </section>
-
-          {/* Bottom Grid */}
-          <div className="customer-bottom-grid">
-            <section className="customer-card">
-              <div className="customer-card-icon blue">
-                <FaEnvelopeOpenText />
-              </div>
-
-              <h3>Create New Ticket</h3>
-              <p>
-                Submit a new support request and our team will follow up with
-                you.
-              </p>
-
-              <button
-  className="customer-primary-btn customer-card-action"
-  onClick={() =>
-    setActivePage("create")
-  }
->
-  <FaPlusCircle />
-  Create Ticket
-</button>
             </section>
+          )}
 
-            <section className="customer-card">
-              <div className="customer-card-icon green">
-                <FaUser />
+          {/* Dashboard Page */}
+          {activePage === "dashboard" && (
+            <>
+              {/* Stats Cards */}
+              <div className="customer-stats-grid">
+                <StatCard
+                  title="Total Tickets"
+                  value="15"
+                  icon={<FaTicketAlt />}
+                  tone="blue"
+                  helper="All requests submitted"
+                />
+
+                <StatCard
+                  title="Open Tickets"
+                  value="4"
+                  icon={<FaClock />}
+                  tone="orange"
+                  helper="Waiting for resolution"
+                />
+
+                <StatCard
+                  title="Resolved"
+                  value="9"
+                  icon={<FaCheckCircle />}
+                  tone="green"
+                  helper="Successfully completed"
+                />
+
+                <StatCard
+                  title="Messages"
+                  value="6"
+                  icon={<FaComments />}
+                  tone="purple"
+                  helper="Support conversations"
+                />
               </div>
 
-              <h3>Profile Summary</h3>
+              {/* Recent Ticket Table */}
+              <section className="customer-card customer-ticket-card">
+                <div className="customer-card-header">
+                  <div>
+                    <h3>Recent Tickets</h3>
+                    <p>Your latest support requests and current status.</p>
+                  </div>
 
-              <div className="customer-profile-summary">
-                <p>
-                  <span>Name</span>
-                  <strong>Customer</strong>
-                </p>
+                  <button className="customer-secondary-btn">View All</button>
+                </div>
 
-                <p>
-                  <span>Email</span>
-                  <strong>customer@gmail.com</strong>
-                </p>
+                <div className="customer-table-wrapper">
+                  <table className="customer-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Issue</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
 
-                <p>
-                  <span>Tickets Raised</span>
-                  <strong>15</strong>
-                </p>
+                    <tbody>
+                      {tickets.map((ticket) => (
+                        <tr key={ticket._id}>
+                          <td>{ticket._id.slice(-5)}</td>
+                          <td>{ticket.issue}</td>
+                          <td>
+                            <span className="customer-badge warning">
+                              {ticket.priority}
+                            </span>
+                          </td>
+                          <td>
+                            <span className="customer-badge open">
+                              {ticket.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* Bottom Grid */}
+              <div className="customer-bottom-grid">
+                <section className="customer-card">
+                  <div className="customer-card-icon blue">
+                    <FaEnvelopeOpenText />
+                  </div>
+
+                  <h3>Create New Ticket</h3>
+                  <p>
+                    Submit a new support request and our team will follow up
+                    with you.
+                  </p>
+
+                  <button
+                    className="customer-primary-btn customer-card-action"
+                    onClick={() => setActivePage("create")}
+                  >
+                    <FaPlusCircle />
+                    Create Ticket
+                  </button>
+                </section>
+
+                <section className="customer-card">
+                  <div className="customer-card-icon green">
+                    <FaUser />
+                  </div>
+
+                  <h3>Profile Summary</h3>
+
+                  <div className="customer-profile-summary">
+                    <p>
+                      <span>Name</span>
+                      <strong>Customer</strong>
+                    </p>
+
+                    <p>
+                      <span>Email</span>
+                      <strong>customer@gmail.com</strong>
+                    </p>
+
+                    <p>
+                      <span>Tickets Raised</span>
+                      <strong>15</strong>
+                    </p>
+                  </div>
+                </section>
               </div>
-            </section>
-          </div>
+            </>
+          )}
+
         </div>
       </main>
     </div>

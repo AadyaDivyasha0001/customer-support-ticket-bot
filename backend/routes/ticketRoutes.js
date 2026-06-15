@@ -775,6 +775,28 @@ Support Team`
     }
   }
 );
+router.get(
+  "/customer/:email",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const tickets =
+        await Ticket.find({
+          email: req.params.email,
+        })
+          .populate("assignedAgent")
+          .sort({
+            createdAt: -1,
+          });
+
+      res.json(tickets);
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  }
+);
    
 module.exports =
   router;
