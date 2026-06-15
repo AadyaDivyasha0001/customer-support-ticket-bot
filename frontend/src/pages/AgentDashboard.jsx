@@ -710,12 +710,6 @@ useEffect(() => {
               onClick={() => setActivePage("open")}
             />
             <SidebarItem
-              text="AI Suggestions"
-              icon={<FaRobot />}
-              active={activePage === "ai"}
-              onClick={() => setActivePage("ai")}
-            />
-            <SidebarItem
               text="Messages"
               icon={<FaComments />}
               active={activePage === "messages"}
