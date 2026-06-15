@@ -36,10 +36,10 @@ const [description, setDescription] = useState("");
   "https://customer-support-ticket-bot.onrender.com/tickets",
   {
     customerName,
+    email,
     title,
     issue,
     description,
-    email,
   },
 
     

@@ -100,7 +100,7 @@ const ticketPriority =
       // AUTO ASSIGN AGENT FROM DATABASE
 
 const issueText =
-  issue.toLowerCase();
+  req.body.issue.toLowerCase();
 
 
 /* PRIORITY PREDICTION */
