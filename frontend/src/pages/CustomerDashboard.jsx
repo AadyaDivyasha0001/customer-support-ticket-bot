@@ -15,7 +15,7 @@ import {
   FaPlus,
   FaEnvelopeOpenText,
 } from "react-icons/fa";
-const [customerName, setCustomerName] = useState("");
+
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
  const user = JSON.parse(
