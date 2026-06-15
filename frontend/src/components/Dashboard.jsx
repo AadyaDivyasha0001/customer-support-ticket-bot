@@ -59,52 +59,47 @@ function Dashboard() {
 
   const today = new Date();
 
-const angryTickets =
-  tickets.filter(
-    ticket =>
-      ticket.customerSentiment ===
-      "Angry"
+  const angryTickets = tickets.filter(
+    (ticket) => ticket.customerSentiment === "Angry"
   ).length;
-  
+
   return (
     <div className="dashboard page-shell">
       {/* Page Header */}
-<div className="page-header">
-  <div className="page-title-block">
-    <span className="eyebrow">Support operations</span>
-    <h1>Dashboard</h1>
-    <p>
-      Monitor ticket volume, urgent issues, recent activity, and support
-      team performance.
-    </p>
-  </div>
+      <div className="page-header">
+        <div className="page-title-block">
+          <span className="eyebrow">Support operations</span>
+          <h1>Dashboard</h1>
+          <p>
+            Monitor ticket volume, urgent issues, recent activity, and support
+            team performance.
+          </p>
+        </div>
 
-  <div className="page-actions">
-    <button
-      className="btn"
-      onClick={() =>
-        exportDashboardReport({
-          totalTickets,
-          openTickets,
-          criticalIssues: criticalTickets,
-          resolutionRate: resolvedPercent,
-          recentActivities: recentActivities.map(
-            (activity) => activity.message
-          ),
-          topAgent: {
-            name: "Rahul Verma",
-            role: "Senior Support Agent",
-          },
-        })
-      }
-    >
-      Export Report
-    </button>
+        <div className="page-actions">
+          <button
+            className="btn"
+            onClick={() =>
+              exportDashboardReport({
+                totalTickets,
+                openTickets,
+                criticalIssues: criticalTickets,
+                resolutionRate: resolvedPercent,
+                recentActivities: recentActivities.map(
+                  (activity) => activity.message
+                ),
+                topAgent: {
+                  name: "Rahul Verma",
+                  role: "Senior Support Agent",
+                },
+              })
+            }
+          >
+            Export Report
+          </button>
+        </div>
+      </div>
 
-    </div>
-</div>
-     
-    
       {/* Welcome / Operations Summary */}
       <div className="welcome-card dashboard-summary">
         <div>
@@ -159,8 +154,6 @@ const angryTickets =
             </div>
             <span className="badge badge-critical">High priority</span>
           </div>
-
-          
 
           <div>
             <h3>Critical Issues</h3>
@@ -234,14 +227,11 @@ const angryTickets =
                 {urgentTickets.length}
               </span>
             </div>
-             <div>
-    <h3>Angry Customers</h3>
-    <h2>{angryTickets}</h2>
-    <p className="kpi-copy">
-      Customers requiring urgent attention
-    </p>
-  </div>
-
+            <div>
+              <h3>Angry Customers</h3>
+              <h2>{angryTickets}</h2>
+              <p className="kpi-copy">Customers requiring urgent attention</p>
+            </div>
 
             <div className="urgent-count-row">
               <strong>{urgentTickets.length}</strong>
@@ -357,7 +347,7 @@ const angryTickets =
                 </div>
               )}
             </div>
-                        <div className="modal-footer">
+            <div className="modal-footer">
               <button
                 className="btn"
                 onClick={() => setShowCriticalModal(false)}
@@ -368,11 +358,8 @@ const angryTickets =
           </div>
         </div>
       )}
-
     </div>
   );
 }
 
 export default Dashboard;
-
-            
