@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import {
   FaTicketAlt,
   FaClock,
@@ -16,11 +17,116 @@ import {
 
 const AgentDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
+   const [tickets, setTickets] = useState([]);
+const [selectedTicket, setSelectedTicket] = useState(null);
+const [messages, setMessages] = useState([]);
+const [replyText, setReplyText] = useState("");
 
+const messagesEndRef = useRef(null);
+
+const API =
+  "https://customer-support-ticket-bot.onrender.com";
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
   };
+   const loadMessages = async (
+  ticketId
+) => {
+  try {
+    const token =
+      localStorage.getItem("token");
+
+    const res =
+      await axios.get(
+        `${API}/tickets/${ticketId}/messages`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    setMessages(res.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const openChat = (ticket) => {
+  setSelectedTicket(ticket);
+
+  loadMessages(ticket._id);
+};
+
+const sendReply = async () => {
+  if (
+    !replyText.trim() ||
+    !selectedTicket
+  )
+    return;
+
+  try {
+    await axios.post(
+      `${API}/tickets/${selectedTicket._id}/reply`,
+      {
+        sender: "Agent",
+        message: replyText,
+      }
+    );
+     setMessages(prev => [
+  ...prev,
+  {
+    sender: "Agent",
+    message: replyText,
+  }
+]);
+    setReplyText("");
+
+    loadMessages(
+      selectedTicket._id
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+useEffect(() => {
+  if (!selectedTicket) return;
+
+  const interval =
+    setInterval(() => {
+      loadMessages(
+        selectedTicket._id
+      );
+    }, 3000);
+
+  return () =>
+    clearInterval(interval);
+}, [selectedTicket]);
+const loadTickets = async () => {
+  try {
+    const token =
+      localStorage.getItem("token");
+
+    const res = await axios.get(
+      `${API}/tickets`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setTickets(res.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+useEffect(() => {
+  loadTickets();
+}, []);
 
   const DashboardContent = () => (
     <>
@@ -132,6 +238,91 @@ const AgentDashboard = () => {
   return (
     <>
       <style>{`
+      .agent-chat-page{
+display:flex;
+height:650px;
+background:#fff;
+border-radius:16px;
+overflow:hidden;
+}
+
+.agent-chat-sidebar{
+width:350px;
+border-right:1px solid #e5e7eb;
+overflow-y:auto;
+}
+
+.agent-chat-ticket{
+padding:15px;
+cursor:pointer;
+border-bottom:1px solid #f1f5f9;
+}
+
+.agent-chat-ticket:hover{
+background:#f8fafc;
+}
+
+.agent-chat-ticket.active{
+background:#dbeafe;
+}
+
+.agent-chat-window{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.agent-chat-header{
+padding:18px;
+border-bottom:1px solid #e5e7eb;
+font-weight:600;
+}
+
+.agent-chat-messages{
+flex:1;
+padding:20px;
+overflow-y:auto;
+background:#f8fafc;
+}
+
+.agent-msg{
+max-width:70%;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.agent-msg.customer{
+background:white;
+}
+
+.agent-msg.agent{
+background:#dcfce7;
+margin-left:auto;
+}
+
+.agent-chat-input{
+display:flex;
+padding:15px;
+border-top:1px solid #e5e7eb;
+gap:10px;
+}
+
+.agent-chat-input textarea{
+flex:1;
+padding:10px;
+border:1px solid #d1d5db;
+border-radius:10px;
+}
+
+.agent-chat-input button{
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:10px;
+cursor:pointer;
+}
         .agent-portal-layout {
           display: flex;
           min-height: 100vh;
@@ -423,16 +614,129 @@ const AgentDashboard = () => {
             </section>
 
             {/* Subpage Router View Container */}
-            {activePage === "dashboard" && <DashboardContent />}
+            {activePage === "dashboard" && (
+  <DashboardContent />
+)}
+           {activePage === "messages" && (
+<div className="agent-chat-page">
 
-            {activePage !== "dashboard" && (
-              <section className="agent-card">
-                <h3>{activePage.charAt(0).toUpperCase() + activePage.slice(1)} Channel</h3>
-                <p style={{ color: "#64748b", fontSize: "14px", marginTop: "8px" }}>
-                  This interface view module is currently rendering active data buffers.
-                </p>
-              </section>
-            )}
+<div className="agent-chat-sidebar">
+
+{tickets.map((ticket)=>(
+
+<div
+key={ticket._id}
+onClick={() => openChat(ticket)}
+className={`agent-chat-ticket ${
+selectedTicket?._id===ticket._id
+? "active"
+: ""
+}`}
+>
+
+<strong>
+{ticket.customerName}
+</strong>
+
+<p>
+{ticket.issue}
+</p>
+
+</div>
+
+))}
+
+</div>
+
+<div className="agent-chat-window">
+
+{selectedTicket ? (
+<>
+
+<div className="agent-chat-header">
+
+{selectedTicket.customerName}
+
+</div>
+
+<div className="agent-chat-messages">
+
+{messages.map((msg,index)=>(
+
+<div
+key={index}
+className={`agent-msg ${
+msg.sender==="Agent"
+? "agent"
+: "customer"
+}`}
+>
+
+{msg.message}
+
+</div>
+
+))}
+
+<div ref={messagesEndRef}/>
+
+</div>
+
+<div className="agent-chat-input">
+
+<textarea
+placeholder="Type reply..."
+value={replyText}
+onChange={(e)=>
+setReplyText(
+e.target.value
+)
+}
+/>
+
+<button
+onClick={sendReply}
+>
+Send
+</button>
+
+</div>
+
+</>
+
+) : (
+
+<div
+style={{
+display:"flex",
+height:"100%",
+justifyContent:"center",
+alignItems:"center"
+}}
+>
+Select a customer chat
+</div>
+
+)}
+
+</div>
+
+</div>
+)}
+{activePage !== "dashboard" &&
+ activePage !== "messages" && (
+  <section className="agent-card">
+    <h3>
+      {activePage.charAt(0).toUpperCase() +
+       activePage.slice(1)} Channel
+    </h3>
+
+    <p>
+      This interface view module is currently rendering active data buffers.
+    </p>
+  </section>
+)}
+            
           </div>
         </main>
       </div>
