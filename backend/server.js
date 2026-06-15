@@ -10,6 +10,9 @@ const authRoutes =
 const express =
   require("express");
 
+  const path =
+require("path");
+
 const mongoose =
   require("mongoose");
 
@@ -71,6 +74,15 @@ app.use(
 );
 
 app.use(express.json());
+app.use(
+  "/uploads",
+  express.static(
+    path.join(
+      __dirname,
+      "uploads"
+    )
+  )
+);
 // Routes
 app.use(
   "/api/agents",

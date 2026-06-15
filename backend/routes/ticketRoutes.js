@@ -2,6 +2,9 @@ const authMiddleware =
   require(
     "../middleware/authMiddleware"
   );
+
+  const multer =
+require("multer");
 const Ticket =
   require("../models/Ticket");
 
@@ -869,6 +872,47 @@ router.post(
     } catch (error) {
       res.status(500).json({
         message: error.message,
+      });
+    }
+  }
+);
+router.post(
+  "/upload-profile",
+  authMiddleware,
+  upload.single(
+    "profileImage"
+  ),
+  async (req, res) => {
+    try {
+
+      const customer =
+        await Customer.findOne({
+          email:
+            req.user.email,
+        });
+
+      if (!customer) {
+        return res.status(404)
+        .json({
+          message:
+            "Customer not found",
+        });
+      }
+
+      customer.profileImage =
+        `/uploads/${req.file.filename}`;
+
+      await customer.save();
+
+      res.json({
+        profileImage:
+          `https://customer-support-ticket-bot.onrender.com/uploads/${req.file.filename}`,
+      });
+
+    } catch (error) {
+      res.status(500).json({
+        message:
+          error.message,
       });
     }
   }

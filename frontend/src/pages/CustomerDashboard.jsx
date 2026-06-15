@@ -27,7 +27,11 @@ const CustomerDashboard = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState([]);
-
+   const [profileImage,
+setProfileImage] =
+useState(
+  user?.profileImage || ""
+);
   // Chat state
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -102,14 +106,19 @@ const CustomerDashboard = () => {
     const text = ticket?.description || ticket?.issue;
     if (text) {
       return [
-        {
-          _id: "seed",
-          sender: "customer",           // always customer – this is their original issue text
-          senderName: ticket.customerName || user?.name || "You",
-          message: text,
-          createdAt: ticket.createdAt,
-        },
-      ];
+  {
+    _id: "seed",
+    sender: "customer",
+    senderName:
+      ticket.customerName ||
+      user?.name ||
+      "You",
+    message: text,
+    createdAt:
+      ticket.createdAt ||
+      new Date(),
+  },
+];
     }
     return [];
   };
@@ -613,6 +622,64 @@ const CustomerDashboard = () => {
                 </table>
               </section>
             )}
+
+            {activePage === "profile" && (
+  <section className="customer-card">
+
+    <h2>My Profile</h2>
+
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: "20px",
+      }}
+    >
+
+      <img
+        src={
+          profileImage ||
+          `https://ui-avatars.com/api/?name=${user?.name}`
+        }
+        alt="Profile"
+        style={{
+          width: "150px",
+          height: "150px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          border: "4px solid #2563eb",
+        }}
+      />
+
+      <br />
+      <br />
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={uploadProfileImage}
+      />
+
+      <h3
+        style={{
+          marginTop: "20px",
+        }}
+      >
+        {user?.name}
+      </h3>
+
+      <p>{user?.email}</p>
+
+      <p>
+        Total Tickets:
+        <strong>
+          {tickets.length}
+        </strong>
+      </p>
+
+    </div>
+
+  </section>
+)}
 
             {/* ── DASHBOARD PAGE ── */}
             {activePage === "dashboard" && (

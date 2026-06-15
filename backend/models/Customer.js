@@ -13,6 +13,15 @@ const CustomerSchema = new mongoose.Schema(
       unique: true,
     },
 
+    profileImage: {
+  type: String,
+  default: "",
+},
+phone: {
+  type: String,
+  default: "",
+},
+
     totalTickets: {
       type: Number,
       default: 0,
