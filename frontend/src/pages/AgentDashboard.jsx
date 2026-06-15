@@ -26,6 +26,9 @@ const [profileImage, setProfileImage] =
   useState(
     localStorage.getItem("agentProfileImage") || ""
   );
+    const agent = JSON.parse(
+    localStorage.getItem("user")
+  );
 const messagesEndRef = useRef(null);
 
 const API =
@@ -948,7 +951,7 @@ Select a customer chat
        <img
   src={
     profileImage ||
-    "https://ui-avatars.com/api/?name=Support+Agent"
+    "https://ui-avatars.com/api/?name=${agent?.name}"
   }
   alt="Agent"
   style={{
@@ -987,10 +990,9 @@ Select a customer chat
 >
   Remove Picture
 </button>    
-          
         <h3 style={{ marginTop: "20px" }}>
-          Support Agent
-        </h3>
+  {agent?.name}
+</h3>
 
         <p
           style={{
@@ -998,7 +1000,7 @@ Select a customer chat
             marginBottom: "15px",
           }}
         >
-          support@company.com
+         {agent?.email}
         </p>
 
         <span
@@ -1040,23 +1042,23 @@ Select a customer chat
           <h3>👤 Agent Details</h3>
 
           <p>
-            <strong>Name:</strong> Support Agent
+            <strong>Name:</strong> {agent?.email}
           </p>
 
           <p>
-            <strong>Email:</strong> support@company.com
+            <strong>Email:</strong> {agent?.email}
           </p>
 
           <p>
-            <strong>Phone:</strong> +91 9876543210
+            <strong>Phone:</strong>{agent?.phone || "-"}
           </p>
 
           <p>
-            <strong>Department:</strong> Customer Support
+            <strong>Department:</strong>{agent?.department || "-"}
           </p>
 
           <p>
-            <strong>Employee ID:</strong> AGT001
+            <strong>Employee ID:</strong> {agent?._id?.slice(-5) || "-"}
           </p>
 
           <p>
