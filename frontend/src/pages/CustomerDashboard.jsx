@@ -7,11 +7,14 @@ import {
   FaComments,
   FaUser,
   FaSignOutAlt,
+  FaSearch,
+  FaHome,
+  FaPlus,
+  FaEnvelopeOpenText,
 } from "react-icons/fa";
 
 const CustomerDashboard = () => {
-  const [activePage, setActivePage] =
-    useState("dashboard");
+  const [activePage, setActivePage] = useState("dashboard");
 
   const logout = () => {
     localStorage.clear();
@@ -19,370 +22,290 @@ const CustomerDashboard = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-       background: "#f3f4f6",
-      }}
-    >
+    <div className="customer-portal-layout">
       {/* Sidebar */}
-      <div
-        style={{
-          width: "260px",
-          background: "#111827",
-          padding: "25px",
-          borderRight: "1px solid #1e293b",
-        }}
-      >
-        <h2
-          style={{
-            color: "white",
-            marginBottom: "35px",
-          }}
-        >
-          Customer Portal
-        </h2>
+      <aside className="customer-sidebar">
+        <div className="customer-sidebar-brand">
+          <div className="customer-sidebar-logo">
+            <FaUser />
+          </div>
 
-        <SidebarItem
-          text="Dashboard"
-          icon="🏠"
-          active={activePage === "dashboard"}
-          onClick={() =>
-            setActivePage("dashboard")
-          }
-        />
+          <div>
+            <h2>Customer Portal</h2>
+            <p>Support Center</p>
+          </div>
+        </div>
 
-        <SidebarItem
-          text="Create Ticket"
-          icon="➕"
-          onClick={() =>
-            setActivePage("create")
-          }
-        />
+        <nav className="customer-sidebar-menu">
+          <SidebarItem
+            text="Dashboard"
+            icon={<FaHome />}
+            active={activePage === "dashboard"}
+            onClick={() => setActivePage("dashboard")}
+          />
 
-        <SidebarItem
-          text="My Tickets"
-          icon="🎫"
-          onClick={() =>
-            setActivePage("tickets")
-          }
-        />
+          <SidebarItem
+            text="Create Ticket"
+            icon={<FaPlusCircle />}
+            active={activePage === "create"}
+            onClick={() => setActivePage("create")}
+          />
 
-        <SidebarItem
-          text="Messages"
-          icon="💬"
-          onClick={() =>
-            setActivePage("messages")
-          }
-        />
+          <SidebarItem
+            text="My Tickets"
+            icon={<FaTicketAlt />}
+            active={activePage === "tickets"}
+            onClick={() => setActivePage("tickets")}
+          />
 
-        <SidebarItem
-          text="Profile"
-          icon="👤"
-          onClick={() =>
-            setActivePage("profile")
-          }
-        />
+          <SidebarItem
+            text="Messages"
+            icon={<FaComments />}
+            active={activePage === "messages"}
+            onClick={() => setActivePage("messages")}
+          />
 
-        <button
-          onClick={logout}
-          style={{
-            width: "100%",
-            marginTop: "40px",
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            padding: "12px",
-            borderRadius: "12px",
-            cursor: "pointer",
-          }}
-        >
+          <SidebarItem
+            text="Profile"
+            icon={<FaUser />}
+            active={activePage === "profile"}
+            onClick={() => setActivePage("profile")}
+          />
+        </nav>
+
+        <button onClick={logout} className="customer-logout-btn">
           <FaSignOutAlt />
-          {" "}Logout
+          <span>Logout</span>
         </button>
-      </div>
+      </aside>
 
       {/* Main Content */}
-      <div
-        style={{
-          flex: 1,
-          padding: "30px",
-        }}
-      >
-        <div
-          style={{
-            background: "#111827",
-            padding: "20px",
-            borderRadius: "16px",
-            marginBottom: "20px",
-            color: "white",
-          }}
-        >
-          Welcome Back 👋
-        </div>
+      <main className="customer-main">
+        <div className="customer-page-shell">
+          {/* Top Bar */}
+          <div className="customer-topbar">
+            <div className="customer-search">
+              <FaSearch />
+              <input type="text" placeholder="Search tickets..." />
+            </div>
 
-        <h1
-          style={{
-            color: "white",
-          }}
-        >
-          Customer Dashboard
-        </h1>
+            <div className="customer-topbar-actions">
+              <button className="customer-primary-btn">
+                <FaPlus />
+                Create Ticket
+              </button>
 
-        <p
-          style={{
-            color: "#94a3b8",
-            marginBottom: "25px",
-          }}
-        >
-          Create and track support tickets.
-        </p>
-        <div
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "25px",
-  }}
->
-  <input
-    type="text"
-    placeholder="Search tickets..."
-    style={{
-      width: "450px",
-      padding: "12px",
-      borderRadius: "12px",
-      border: "1px solid #d1d5db",
-    }}
-  />
+              <div className="customer-profile-chip">
+                <div className="customer-profile-avatar">
+                  <FaUser />
+                </div>
 
-  <div
-    style={{
-      display: "flex",
-      gap: "15px",
-      alignItems: "center",
-    }}
-  >
-    <button
-      style={{
-        background: "#2563eb",
-        color: "white",
-        border: "none",
-        padding: "12px 20px",
-        borderRadius: "12px",
-      }}
-    >
-      + Create Ticket
-    </button>
+                <div>
+                  <strong>Customer</strong>
+                  <span>Portal User</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <div
-      style={{
-        background: "white",
-        padding: "10px 18px",
-        borderRadius: "12px",
-        boxShadow:
-          "0 2px 10px rgba(0,0,0,0.08)",
-      }}
-    >
-      Customer
-    </div>
-  </div>
-</div>
+          {/* Welcome Banner */}
+          <section className="customer-welcome-banner">
+            <div>
+              <span className="customer-eyebrow">Support workspace</span>
+              <h1>Welcome back 👋</h1>
+              <p>
+                Create support tickets, track issue progress, and stay updated
+                on every conversation with the support team.
+              </p>
+            </div>
 
-        {/* Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(220px,1fr))",
-            gap: "20px",
-          }}
-        >
-          <StatCard
-            title="Total Tickets"
-            value="15"
-            icon={<FaTicketAlt />}
-          />
-
-          <StatCard
-            title="Open Tickets"
-            value="4"
-            icon={<FaClock />}
-          />
-
-          <StatCard
-            title="Resolved"
-            value="9"
-            icon={<FaCheckCircle />}
-          />
-
-          <StatCard
-            title="Messages"
-            value="6"
-            icon={<FaComments />}
-          />
-        </div>
-
-        {/* Ticket Table */}
-        <div
-          className="agent-card"
-          style={{
-            marginTop: "25px",
-          }}
-        >
-          <h3>Recent Tickets</h3>
-
-          <table
-            style={{
-  background: "white",
-  borderRadius: "20px",
-  padding: "25px",
-  boxShadow:
-    "0 2px 10px rgba(0,0,0,0.08)"
-}}
-          >
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Issue</th>
-                <th>Priority</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>T001</td>
-                <td>Payment Failed</td>
-                <td>High</td>
-                <td>Open</td>
-              </tr>
-
-              <tr>
-                <td>T002</td>
-                <td>Login Issue</td>
-                <td>Medium</td>
-                <td>Resolved</td>
-              </tr>
-
-              <tr>
-                <td>T003</td>
-                <td>Account Update</td>
-                <td>Low</td>
-                <td>In Progress</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Bottom Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <div className="agent-card">
-            <h3>Create New Ticket</h3>
-
-            <p>
-              Submit a new support request.
-            </p>
-
-            <button
-              style={{
-                marginTop: "15px",
-                background: "#2563eb",
-                color: "white",
-                border: "none",
-                padding: "10px 20px",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-            >
+            <button className="customer-light-btn">
               <FaPlusCircle />
-              {" "}Create Ticket
+              New Request
             </button>
+          </section>
+
+          {/* Page Header */}
+          <div className="customer-page-header">
+            <div>
+              <h2>Customer Dashboard</h2>
+              <p>Create and track support tickets from one place.</p>
+            </div>
           </div>
 
-          <div className="agent-card">
-            <h3>Profile Summary</h3>
+          {/* Cards */}
+          <div className="customer-stats-grid">
+            <StatCard
+              title="Total Tickets"
+              value="15"
+              icon={<FaTicketAlt />}
+              tone="blue"
+              helper="All requests submitted"
+            />
 
-            <p>Name: Customer</p>
-            <p>Email: customer@gmail.com</p>
-            <p>Tickets Raised: 15</p>
+            <StatCard
+              title="Open Tickets"
+              value="4"
+              icon={<FaClock />}
+              tone="orange"
+              helper="Waiting for resolution"
+            />
+
+            <StatCard
+              title="Resolved"
+              value="9"
+              icon={<FaCheckCircle />}
+              tone="green"
+              helper="Successfully completed"
+            />
+
+            <StatCard
+              title="Messages"
+              value="6"
+              icon={<FaComments />}
+              tone="purple"
+              helper="Support conversations"
+            />
+          </div>
+
+          {/* Ticket Table */}
+          <section className="customer-card customer-ticket-card">
+            <div className="customer-card-header">
+              <div>
+                <h3>Recent Tickets</h3>
+                <p>Your latest support requests and current status.</p>
+              </div>
+
+              <button className="customer-secondary-btn">View All</button>
+            </div>
+
+            <div className="customer-table-wrapper">
+              <table className="customer-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Issue</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>T001</strong>
+                    </td>
+                    <td>Payment Failed</td>
+                    <td>
+                      <span className="customer-badge danger">High</span>
+                    </td>
+                    <td>
+                      <span className="customer-badge open">Open</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <strong>T002</strong>
+                    </td>
+                    <td>Login Issue</td>
+                    <td>
+                      <span className="customer-badge warning">Medium</span>
+                    </td>
+                    <td>
+                      <span className="customer-badge success">Resolved</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <strong>T003</strong>
+                    </td>
+                    <td>Account Update</td>
+                    <td>
+                      <span className="customer-badge neutral">Low</span>
+                    </td>
+                    <td>
+                      <span className="customer-badge progress">
+                        In Progress
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* Bottom Grid */}
+          <div className="customer-bottom-grid">
+            <section className="customer-card">
+              <div className="customer-card-icon blue">
+                <FaEnvelopeOpenText />
+              </div>
+
+              <h3>Create New Ticket</h3>
+              <p>
+                Submit a new support request and our team will follow up with
+                you.
+              </p>
+
+              <button className="customer-primary-btn customer-card-action">
+                <FaPlusCircle />
+                Create Ticket
+              </button>
+            </section>
+
+            <section className="customer-card">
+              <div className="customer-card-icon green">
+                <FaUser />
+              </div>
+
+              <h3>Profile Summary</h3>
+
+              <div className="customer-profile-summary">
+                <p>
+                  <span>Name</span>
+                  <strong>Customer</strong>
+                </p>
+
+                <p>
+                  <span>Email</span>
+                  <strong>customer@gmail.com</strong>
+                </p>
+
+                <p>
+                  <span>Tickets Raised</span>
+                  <strong>15</strong>
+                </p>
+              </div>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
 
-const SidebarItem = ({
-  text,
-  icon,
-  active,
-  onClick,
-}) => (
-  <div
+const SidebarItem = ({ text, icon, active, onClick }) => (
+  <button
+    type="button"
     onClick={onClick}
-    style={{
-      padding: "14px",
-      marginBottom: "10px",
-      borderRadius: "12px",
-      cursor: "pointer",
-      color: "white",
-      background: active
-        ? "#2563eb"
-        : "transparent",
-    }}
+    className={`customer-sidebar-item ${active ? "active" : ""}`}
   >
-    {icon} {text}
-  </div>
+    <span className="customer-sidebar-item-icon">{icon}</span>
+    <span>{text}</span>
+  </button>
 );
 
-const StatCard = ({
-  title,
-  value,
-  icon,
-}) => (
-  <div
-    style={{
-      background: "white",
-      borderRadius: "20px",
-      padding: "25px",
-      boxShadow:
-        "0 2px 10px rgba(0,0,0,0.08)",
-    }}
-  >
-    <div
-      style={{
-        fontSize: "28px",
-        color: "#2563eb",
-        marginBottom: "15px",
-      }}
-    >
-      {icon}
+const StatCard = ({ title, value, icon, tone, helper }) => (
+  <div className="customer-stat-card">
+    <div className={`customer-stat-icon ${tone}`}>{icon}</div>
+
+    <div>
+      <h3>{title}</h3>
+      <h2>{value}</h2>
+      <p>{helper}</p>
     </div>
-
-    <h2
-      style={{
-        color: "#111827",
-      }}
-    >
-      {value}
-    </h2>
-
-    <p
-      style={{
-        color: "#6b7280",
-      }}
-    >
-      {title}
-    </p>
   </div>
 );
 
