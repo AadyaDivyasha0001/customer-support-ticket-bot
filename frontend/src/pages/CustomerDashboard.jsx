@@ -37,7 +37,6 @@ const [description, setDescription] = useState("");
   {
     customerName,
     email,
-    title,
     issue,
     description,
   },

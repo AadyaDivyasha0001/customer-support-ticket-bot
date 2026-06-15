@@ -34,10 +34,9 @@ router.post(
     try {
         const {
   customerName,
-  title,
+  email,
   issue,
   description,
-  email,
 } = req.body;
 
 // CUSTOMER NAME
