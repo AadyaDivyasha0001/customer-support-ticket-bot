@@ -622,7 +622,6 @@ const CustomerDashboard = () => {
                 </table>
               </section>
             )}
-
             {activePage === "profile" && (
   <section className="customer-card">
 
@@ -630,56 +629,157 @@ const CustomerDashboard = () => {
 
     <div
       style={{
-        textAlign: "center",
-        marginTop: "20px",
+        display: "grid",
+        gridTemplateColumns: "300px 1fr",
+        gap: "30px",
+        marginTop: "25px",
       }}
     >
 
-      <img
-        src={
-          profileImage ||
-          `https://ui-avatars.com/api/?name=${user?.name}`
-        }
-        alt="Profile"
+      {/* LEFT SIDE */}
+
+      <div
         style={{
-          width: "150px",
-          height: "150px",
-          borderRadius: "50%",
-          objectFit: "cover",
-          border: "4px solid #2563eb",
-        }}
-      />
-
-      <br />
-      <br />
-
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => console.log("file selected", e.target.files[0])}
-      />
-
-      <h3
-        style={{
-          marginTop: "20px",
+          textAlign: "center",
+          padding: "25px",
+          border: "1px solid #e5e7eb",
+          borderRadius: "15px",
         }}
       >
-        {user?.name}
-      </h3>
 
-      <p>{user?.email}</p>
+        <img
+          src={
+            profileImage ||
+            `https://ui-avatars.com/api/?name=${user?.name}`
+          }
+          alt="Profile"
+          style={{
+            width: "160px",
+            height: "160px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: "4px solid #2563eb",
+          }}
+        />
 
-      <p>
-        Total Tickets:
-        <strong>
-          {tickets.length}
-        </strong>
-      </p>
+        <br /><br />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files[0];
+
+            if (file) {
+              setProfileImage(
+                URL.createObjectURL(file)
+              );
+            }
+
+            uploadProfileImage(e);
+          }}
+        />
+
+        <h3>{user?.name}</h3>
+
+        <p>{user?.email}</p>
+
+      </div>
+
+      {/* RIGHT SIDE */}
+
+      <div>
+
+        <h3>Customer Details</h3>
+
+        <p><strong>Name:</strong> {user?.name}</p>
+        <p><strong>Email:</strong> {user?.email}</p>
+        <p><strong>Contact:</strong> {user?.phone || "Not Available"}</p>
+
+        <hr />
+
+        <h3>Assigned Agent</h3>
+
+        <p>
+          <strong>Name:</strong>{" "}
+          {tickets[0]?.assignedAgent?.name || "Not Assigned"}
+        </p>
+
+        <p>
+          <strong>Email:</strong>{" "}
+          {tickets[0]?.assignedAgent?.email || "-"}
+        </p>
+
+        <p>
+          <strong>Phone:</strong>{" "}
+          {tickets[0]?.assignedAgent?.phone || "-"}
+        </p>
+
+        <p>
+          <strong>Department:</strong>{" "}
+          {tickets[0]?.assignedAgent?.department || "-"}
+        </p>
+
+      </div>
 
     </div>
 
   </section>
 )}
+<div
+  style={{
+    marginTop: "40px",
+  }}
+>
+  <h3>Ticket Tracking</h3>
+
+  {tickets.map((ticket) => (
+    <div
+      key={ticket._id}
+      style={{
+        padding: "15px",
+        border: "1px solid #e5e7eb",
+        borderRadius: "10px",
+        marginBottom: "15px",
+      }}
+    >
+      <p>
+        <strong>Issue:</strong>
+        {" "}
+        {ticket.issue}
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        {" "}
+        {ticket.status}
+      </p>
+
+      <p>
+        <strong>Priority:</strong>
+        {" "}
+        {ticket.priority}
+      </p>
+
+      <progress
+        value={
+          ticket.status === "Resolved"
+            ? 100
+            : ticket.status === "In Progress"
+            ? 60
+            : 20
+        }
+        max="100"
+        style={{
+          width: "100%",
+          height: "12px",
+        }}
+      />
+    </div>
+  ))}
+</div>
+
+
 
             {/* ── DASHBOARD PAGE ── */}
             {activePage === "dashboard" && (
