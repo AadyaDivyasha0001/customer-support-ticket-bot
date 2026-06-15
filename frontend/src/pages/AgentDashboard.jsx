@@ -257,6 +257,14 @@ useEffect(() => {
   return (
     <>
       <style>{`
+      .agent-card p,
+.agent-card strong,
+.agent-card h2,
+.agent-card h3,
+.agent-card h4,
+.agent-card span{
+  color:#1e293b !important;
+}
 .agent-profile-card,
 .agent-profile-details,
 .agent-performance-card,
