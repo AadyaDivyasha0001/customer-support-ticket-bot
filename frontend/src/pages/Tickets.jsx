@@ -438,13 +438,6 @@ const Tickets = () => {
       Monitor, manage and resolve customer support requests.
     </p>
   </div>
-
-  <button
-    onClick={() => setShowModal(true)}
-    className="create-ticket-btn"
-  >
-    + Create Ticket
-  </button>
 </div>
 </div>
        
@@ -665,7 +658,8 @@ const Tickets = () => {
              
           </div>
         </div>
-      )}
+      )}  
+      
 
       {/* DETAILS MODAL */}
       {selectedTicket ? ( 
