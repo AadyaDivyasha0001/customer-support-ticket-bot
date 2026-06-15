@@ -18,6 +18,7 @@ import {
 
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
+  const [customerName, setCustomerName] = useState("");
  const user = JSON.parse(
   localStorage.getItem("user")
 );
