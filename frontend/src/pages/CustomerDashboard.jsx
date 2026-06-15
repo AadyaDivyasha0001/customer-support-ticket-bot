@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   FaTicketAlt,
   FaPlusCircle,
@@ -13,7 +15,7 @@ import {
   FaPlus,
   FaEnvelopeOpenText,
 } from "react-icons/fa";
-
+const [customerName, setCustomerName] = useState("");
 const CustomerDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
  const user = JSON.parse(
@@ -57,10 +59,11 @@ const email = user?.email;
         },
       }
     );
-
+<ToastContainer>
    toast.success(
   "🎫 Ticket created successfully!"
 );
+</ToastContainer>
 
     setCustomerName("");
 setTitle("");
@@ -71,8 +74,7 @@ setDescription("");
     setActivePage("tickets");
   } catch (error) {
   console.log(error);
-
-  alert(
+alert(
     error.response?.data?.message ||
     error.message
   );
