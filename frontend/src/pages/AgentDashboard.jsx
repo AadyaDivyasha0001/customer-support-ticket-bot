@@ -480,7 +480,52 @@ background:#22c55e;
 .performance-fill.blue{
 background:#2563eb;
 }
+.agent-ticket-board{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+margin-top:20px;
+}
 
+.ticket-column{
+background:white;
+padding:20px;
+border-radius:16px;
+box-shadow:0 2px 12px rgba(0,0,0,0.08);
+min-height:500px;
+}
+
+.ticket-column h3{
+margin-bottom:20px;
+color:#1e293b;
+}
+
+.ticket-card{
+background:#f8fafc;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+cursor:pointer;
+border:1px solid #e2e8f0;
+transition:0.2s;
+}
+
+.ticket-card:hover{
+transform:translateY(-2px);
+background:#eff6ff;
+}
+
+.ticket-card h4{
+margin:0 0 8px;
+font-size:14px;
+color:#1e293b;
+}
+
+.ticket-card p{
+margin:0;
+font-size:13px;
+color:#64748b;
+}
 
 
 
@@ -967,8 +1012,187 @@ Select a customer chat
 
 </div>
 )}
+{activePage === "assigned" && (
+  <section className="agent-card">
+
+    <div className="agent-card-header">
+      <div>
+        <h3>Assigned Tickets</h3>
+        <p>Tickets currently assigned to you.</p>
+      </div>
+    </div>
+
+    <div className="agent-table-wrapper">
+
+      <table className="agent-table">
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Issue</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {tickets.map((ticket) => (
+
+            <tr key={ticket._id}>
+
+              <td>{ticket._id.slice(-5)}</td>
+
+              <td>
+                {ticket.customerName}
+              </td>
+
+              <td>
+                {ticket.issue}
+              </td>
+
+              <td>
+                <span className="agent-badge warning">
+                  {ticket.priority || "Medium"}
+                </span>
+              </td>
+
+              <td>
+                <span className="agent-badge pending">
+                  {ticket.status}
+                </span>
+              </td>
+
+              <td>
+
+                <button
+                  className="agent-secondary-btn"
+                  onClick={() => {
+                    setActivePage("messages");
+                    openChat(ticket);
+                  }}
+                >
+                  Chat
+                </button>
+
+              </td>
+
+            </tr>
+
+          ))}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+)}
+
+{activePage === "open" && (
+
+<div className="agent-ticket-board">
+
+  <div className="ticket-column">
+
+    <h3>Open</h3>
+
+    {tickets
+      .filter(
+        (ticket) =>
+          ticket.status === "Open"
+      )
+      .map((ticket) => (
+
+      <div
+        key={ticket._id}
+        className="ticket-card"
+      >
+
+        <h4>{ticket.issue}</h4>
+
+        <p>
+          {ticket.customerName}
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+  <div className="ticket-column">
+
+    <h3>In Progress</h3>
+
+    {tickets
+      .filter(
+        (ticket) =>
+          ticket.status ===
+          "In Progress"
+      )
+      .map((ticket) => (
+
+      <div
+        key={ticket._id}
+        className="ticket-card"
+      >
+
+        <h4>{ticket.issue}</h4>
+
+        <p>
+          {ticket.customerName}
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+  <div className="ticket-column">
+
+    <h3>Resolved</h3>
+
+    {tickets
+      .filter(
+        (ticket) =>
+          ticket.status ===
+          "Resolved"
+      )
+      .map((ticket) => (
+
+      <div
+           key={ticket._id}
+          className="ticket-card"
+         onClick={() => {
+        setActivePage("messages");
+       openChat(ticket);
+}}
+>
+
+        <h4>{ticket.issue}</h4>
+
+        <p>
+          {ticket.customerName}
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+
+)}
+
+
 {activePage === "profile" && (
-    
+
   <section className="agent-card">
 
     <h2>My Profile</h2>
