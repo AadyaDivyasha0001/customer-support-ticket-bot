@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { FaPaperPlane } from "react-icons/fa";
 import {
   FaTicketAlt,
   FaClock,
@@ -238,91 +239,169 @@ useEffect(() => {
   return (
     <>
       <style>{`
-      .agent-chat-page{
-display:flex;
-height:650px;
-background:#fff;
-border-radius:16px;
-overflow:hidden;
+
+.agent-chat-page{
+  display:flex;
+  height:640px;
+  background:#f0f2f5;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
 
 .agent-chat-sidebar{
-width:350px;
-border-right:1px solid #e5e7eb;
-overflow-y:auto;
+  width:320px;
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  overflow-y:auto;
 }
 
 .agent-chat-ticket{
-padding:15px;
-cursor:pointer;
-border-bottom:1px solid #f1f5f9;
+  display:flex;
+  flex-direction:column;
+  padding:16px;
+  cursor:pointer;
+  border-bottom:1px solid #f1f5f9;
+  transition:.2s;
 }
 
 .agent-chat-ticket:hover{
-background:#f8fafc;
+  background:#f8fafc;
 }
 
 .agent-chat-ticket.active{
-background:#dbeafe;
+  background:#e9edef;
+}
+
+.agent-chat-ticket strong{
+  font-size:14px;
+  color:#111827;
+}
+
+.agent-chat-ticket p{
+  font-size:13px;
+  color:#64748b;
+  margin-top:4px;
 }
 
 .agent-chat-window{
-flex:1;
-display:flex;
-flex-direction:column;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:#efeae2;
 }
 
 .agent-chat-header{
-padding:18px;
-border-bottom:1px solid #e5e7eb;
-font-weight:600;
+  padding:14px 18px;
+  background:#f0f2f5;
+  border-bottom:1px solid #e5e7eb;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
 .agent-chat-messages{
-flex:1;
-padding:20px;
-overflow-y:auto;
-background:#f8fafc;
+  flex:1;
+  overflow-y:auto;
+  padding:20px;
+  background:#efeae2;
 }
 
 .agent-msg{
-max-width:70%;
-padding:12px;
-border-radius:12px;
-margin-bottom:10px;
+  max-width:65%;
+  padding:10px 14px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:14px;
+  line-height:1.5;
+  box-shadow:0 1px 2px rgba(0,0,0,0.08);
 }
 
 .agent-msg.customer{
-background:white;
+  background:white;
 }
 
 .agent-msg.agent{
-background:#dcfce7;
-margin-left:auto;
+  background:#d9fdd3;
+  margin-left:auto;
 }
 
 .agent-chat-input{
-display:flex;
-padding:15px;
-border-top:1px solid #e5e7eb;
-gap:10px;
+  padding:12px 16px;
+  background:#f0f2f5;
+  border-top:1px solid #e5e7eb;
+  display:flex;
+  gap:10px;
 }
 
 .agent-chat-input textarea{
-flex:1;
-padding:10px;
-border:1px solid #d1d5db;
-border-radius:10px;
+  flex:1;
+  border:none;
+  outline:none;
+  resize:none;
+  background:white;
+  border-radius:25px;
+  padding:12px 18px;
+  font-size:14px;
 }
 
 .agent-chat-input button{
-background:#2563eb;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-cursor:pointer;
+  width:52px;
+  height:52px;
+  border:none;
+  border-radius:50%;
+  background:#22c55e;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         .agent-portal-layout {
           display: flex;
           min-height: 100vh;
@@ -628,7 +707,7 @@ cursor:pointer;
 key={ticket._id}
 onClick={() => openChat(ticket)}
 className={`agent-chat-ticket ${
-selectedTicket?._id===ticket._id
+selectedTicket?._id === ticket._id
 ? "active"
 : ""
 }`}
@@ -639,7 +718,7 @@ selectedTicket?._id===ticket._id
 </strong>
 
 <p>
-{ticket.issue}
+#{ticket._id.slice(-5)} · {ticket.issue}
 </p>
 
 </div>
@@ -655,7 +734,35 @@ selectedTicket?._id===ticket._id
 
 <div className="agent-chat-header">
 
+<div
+style={{
+width:"40px",
+height:"40px",
+borderRadius:"50%",
+background:"#2563eb",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+color:"#fff"
+}}
+>
+<FaHeadset />
+</div>
+
+<div>
+<strong>
 {selectedTicket.customerName}
+</strong>
+
+<div
+style={{
+fontSize:"12px",
+color:"#64748b"
+}}
+>
+{selectedTicket.issue}
+</div>
+</div>
 
 </div>
 
@@ -665,14 +772,37 @@ selectedTicket?._id===ticket._id
 
 <div
 key={index}
+style={{
+display:"flex",
+justifyContent:
+msg.sender === "Agent"
+? "flex-end"
+: "flex-start"
+}}
+>
+
+<div
 className={`agent-msg ${
-msg.sender==="Agent"
+msg.sender === "Agent"
 ? "agent"
 : "customer"
 }`}
 >
 
+<div
+style={{
+fontSize:"11px",
+fontWeight:"600",
+marginBottom:"4px",
+color:"#2563eb"
+}}
+>
+{msg.sender}
+</div>
+
 {msg.message}
+
+</div>
 
 </div>
 
@@ -694,10 +824,8 @@ e.target.value
 }
 />
 
-<button
-onClick={sendReply}
->
-Send
+<button onClick={sendReply}>
+<FaPaperPlane />
 </button>
 
 </div>
