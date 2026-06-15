@@ -40,10 +40,12 @@ const email = user?.email;
       await axios.post(
   "https://customer-support-ticket-bot.onrender.com/tickets",
   {
-    customerName,
-    email,
-    issue,
-    description,
+    
+  customerName: user.name,
+  email: user.email,
+  issue: description,
+  description,
+
   },
 
     
