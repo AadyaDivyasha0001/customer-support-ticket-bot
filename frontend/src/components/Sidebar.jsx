@@ -6,7 +6,7 @@ import {
   FaUserTie,
   FaChartBar,
   FaSignOutAlt,
-  FaHeadset,
+  
 } from "react-icons/fa";
 
 
