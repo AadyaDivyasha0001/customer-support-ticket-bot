@@ -1,11 +1,4 @@
-import {
-  FaTicketAlt,
-  FaEnvelopeOpenText,
-  FaExclamationTriangle,
-  FaChartLine,
-  FaUserTie,
-  FaTimes,
-} from "react-icons/fa";
+
 import { useEffect, useMemo, useState } from "react";
 import api from "../services/api";
 import { exportDashboardReport } from "../utils/exportReport";
