@@ -32,7 +32,7 @@ const [profileImage, setProfileImage] =
 const messagesEndRef = useRef(null);
 
 const departmentTickets =
-  departmentTickets.filter(
+  tickets.filter(
     (ticket) =>
       ticket.department ===
       agent?.department
@@ -1112,7 +1112,7 @@ Select a customer chat
 
     <h3>Open</h3>
 
-    {tickets
+    {departmentTickets
       .filter(
         (ticket) =>
           ticket.status === "Open"
@@ -1140,7 +1140,7 @@ Select a customer chat
 
     <h3>In Progress</h3>
 
-    {tickets
+    {departmentTickets
       .filter(
         (ticket) =>
           ticket.status ===
@@ -1169,7 +1169,7 @@ Select a customer chat
 
     <h3>Resolved</h3>
 
-    {tickets
+    {departmentTickets
       .filter(
         (ticket) =>
           ticket.status ===
@@ -1231,9 +1231,9 @@ Select a customer chat
       >
        <img
   src={
-    profileImage ||
-    'https://ui-avatars.com/api/?name=${agent?.name}'
-  }
+  profileImage ||
+  `https://ui-avatars.com/api/?name=${agent?.name}`
+}
   alt="Agent"
   style={{
     width:"160px",
