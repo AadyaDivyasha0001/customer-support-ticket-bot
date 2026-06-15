@@ -27,11 +27,11 @@ const CustomerDashboard = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState([]);
-   const [profileImage,
-setProfileImage] =
-useState(
-  user?.profileImage || ""
-);
+  const [profileImage,
+    setProfileImage] =
+      useState(
+       user?.profileImage || ""
+       );
   // Chat state
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [messages, setMessages] = useState([]);
