@@ -31,7 +31,10 @@ const [profileImage, setProfileImage] =
     localStorage.getItem("user")
   );
 const messagesEndRef = useRef(null);
-console.log("Logged Agent:", agent);
+console.log(
+  "Logged Agent:",
+  JSON.stringify(agent, null, 2)
+);
 console.log("Tickets:", tickets);
 const assignedTickets = tickets;
 const API =
@@ -138,7 +141,7 @@ useEffect(() => {
       localStorage.getItem("token");
 
     const res = await axios.get(
-      `${API}/tickets/agent/${agent._id}`,
+      `${API}/tickets/agent/${agent.id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

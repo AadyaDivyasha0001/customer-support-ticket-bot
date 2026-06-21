@@ -835,6 +835,11 @@ router.get(
   authMiddleware,
   async (req, res) => {
     try {
+       console.log(
+      "Requested Agent:",
+      req.params.agentId
+    );
+
 
       const tickets =
         await Ticket.find({
