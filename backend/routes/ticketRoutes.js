@@ -836,9 +836,14 @@ router.get(
   async (req, res) => {
     try {
        console.log(
-      "Requested Agent:",
+      "EMAIL:",
       req.params.email,
     );
+      const agent = await Agent.findOne({
+      email: req.params.email,
+    });
+
+    console.log("AGENT FOUND:", agent);
 
 
       const tickets =
@@ -850,7 +855,8 @@ router.get(
         .sort({
           createdAt: -1
         });
-
+        console.log("TICKETS FOUND:", tickets.length);
+    console.log("TICKETS:", tickets);
       res.json(tickets);
 
     } catch (error) {
