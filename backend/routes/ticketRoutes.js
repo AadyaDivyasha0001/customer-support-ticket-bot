@@ -253,7 +253,7 @@ Support Team`
     console.log("Sending webhook to n8n...");
 
     const response = await axios.post(
-           "https://n8n-render-jtpq.onrender.com/webhook-test/ticket-created",
+           "https://n8n-render-jtpq.onrender.com/webhook/ticket-created",
       {
         _id: savedTicket._id,
         customerName: savedTicket.customerName,
