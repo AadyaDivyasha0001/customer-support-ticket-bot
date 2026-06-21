@@ -31,36 +31,36 @@ const [profileImage, setProfileImage] =
     localStorage.getItem("user")
   );
 const messagesEndRef = useRef(null);
-
-const assignedTickets =
-  tickets.filter(
-    (ticket) =>
-      ticket.assignedAgent?._id ===
-      agent?._id
-  );
+console.log("Logged Agent:", agent);
+console.log("Tickets:", tickets);
+const assignedTickets = tickets;
 const API =
   "https://customer-support-ticket-bot.onrender.com";
   const logout = () => {
     localStorage.clear();
     window.location.href = "/";
   };
-   const loadMessages = async (
+  const loadMessages = async (
   ticketId
 ) => {
   try {
+
     const token =
       localStorage.getItem("token");
 
-      const res = await axios.get(
-  `${API}/tickets/agent/${agent._id}`,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
+    const res =
+      await axios.get(
+        `${API}/tickets/${ticketId}/messages`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
 
     setMessages(res.data);
+
   } catch (err) {
     console.log(err);
   }
@@ -132,14 +132,14 @@ useEffect(() => {
   return () =>
     clearInterval(interval);
 }, [selectedTicket]);
-const loadTickets = async () => {
+ const loadTickets = async () => {
   try {
-     const token =
+    const token =
       localStorage.getItem("token");
 
     const res = await axios.get(
-      `${API}/tickets`,
-    {
+      `${API}/tickets/agent/${agent._id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,6 +147,7 @@ const loadTickets = async () => {
     );
 
     setTickets(res.data);
+
   } catch (err) {
     console.log(err);
   }
