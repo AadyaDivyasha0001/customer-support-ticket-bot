@@ -93,23 +93,11 @@ router.post(
         
       } = req.body;
 
-     const user = await User.findOne({ email });
-
-const agent = await Agent.findOne({
-  email: user.email
-});
-
-res.json({
-  token,
-  user: {
-    id: user._id,
-    role: user.role,
-    name: user.name,
-    email: user.email,
-
-    agentId: agent?._id
-  }
-});
+      const user =
+        await User.findOne({
+          email,
+        });
+           console.log("FOUND USER:", user);
 
       if (!user) {
         return res
