@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import socket from "../socket";
 import { FaPaperPlane } from "react-icons/fa";
 import {
   FaTicketAlt,
@@ -31,13 +32,12 @@ const [profileImage, setProfileImage] =
   );
 const messagesEndRef = useRef(null);
 
-const departmentTickets =
+const assignedTickets =
   tickets.filter(
     (ticket) =>
-      ticket.department ===
-      agent?.department
+      ticket.assignedAgent?._id ===
+      agent?._id
   );
-
 const API =
   "https://customer-support-ticket-bot.onrender.com";
   const logout = () => {
@@ -51,16 +51,14 @@ const API =
     const token =
       localStorage.getItem("token");
 
-    const res =
-      await axios.get(
-        `${API}/tickets/${ticketId}/messages`,
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(
+  `${API}/tickets/agent/${agent._id}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
     setMessages(res.data);
   } catch (err) {
@@ -155,7 +153,27 @@ const loadTickets = async () => {
 };
 useEffect(() => {
   loadTickets();
+
+  socket.on(
+    "ticketUpdated",
+    () => {
+      loadTickets();
+    }
+  );
+
+  socket.on(
+    "ticketCreated",
+    () => {
+      loadTickets();
+    }
+  );
+
+  return () => {
+    socket.off("ticketUpdated");
+    socket.off("ticketCreated");
+  };
 }, []);
+
  useEffect(() => {
   messagesEndRef.current?.scrollIntoView({
     behavior: "smooth",
@@ -874,7 +892,7 @@ color:#64748b;
 
 <div className="agent-chat-sidebar">
 
-{departmentTickets.map((ticket)=>(
+{assignedTickets.map((ticket)=>(
 
 <div
 key={ticket._id}
@@ -1051,7 +1069,7 @@ Select a customer chat
 
         <tbody>
 
-          {departmentTickets.map((ticket) => (
+          {assignedTickets.map((ticket) => (
 
             <tr key={ticket._id}>
 
@@ -1112,7 +1130,7 @@ Select a customer chat
 
     <h3>Open</h3>
 
-    {departmentTickets
+    {assignedTickets
       .filter(
         (ticket) =>
           ticket.status === "Open"
@@ -1140,7 +1158,7 @@ Select a customer chat
 
     <h3>In Progress</h3>
 
-    {departmentTickets
+    {assignedTickets
       .filter(
         (ticket) =>
           ticket.status ===
@@ -1169,7 +1187,7 @@ Select a customer chat
 
     <h3>Resolved</h3>
 
-    {departmentTickets
+    {assignedTickets
       .filter(
         (ticket) =>
           ticket.status ===

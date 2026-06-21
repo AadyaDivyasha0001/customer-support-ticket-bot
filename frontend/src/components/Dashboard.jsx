@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { useEffect, useMemo, useState } from "react";
 import api from "../services/api";
+import socket from "../socket";
 import { exportDashboardReport } from "../utils/exportReport";
 
 function Dashboard() {
@@ -15,8 +16,29 @@ function Dashboard() {
   const [showCriticalModal, setShowCriticalModal] = useState(false);
 
   useEffect(() => {
-    fetchTickets();
-  }, []);
+
+  fetchTickets();
+
+  socket.on(
+    "ticketUpdated",
+    fetchTickets
+  );
+
+  socket.on(
+    "ticketCreated",
+    fetchTickets
+  );
+
+  return () => {
+    socket.off(
+      "ticketUpdated"
+    );
+    socket.off(
+      "ticketCreated"
+    );
+  };
+
+}, []);
 
   const fetchTickets = async () => {
     try {

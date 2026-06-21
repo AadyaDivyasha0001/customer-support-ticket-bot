@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import socket from "../socket";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -59,9 +60,28 @@ const CustomerDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    loadTickets();
-  }, []);
+ useEffect(() => {
+  loadTickets();
+
+  socket.on(
+    "ticketUpdated",
+    () => {
+      loadTickets();
+    }
+  );
+
+  socket.on(
+    "ticketCreated",
+    () => {
+      loadTickets();
+    }
+  );
+
+  return () => {
+    socket.off("ticketUpdated");
+    socket.off("ticketCreated");
+  };
+}, []);
 
   const createTicket = async () => {
     try {

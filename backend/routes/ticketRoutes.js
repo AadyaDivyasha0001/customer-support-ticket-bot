@@ -506,6 +506,7 @@ router.put(
       // ASSIGN AGENT
       ticket.assignedAgent =
         agent._id;
+        ticket.status = "Assigned";
 
       agent.tickets += 1;
 
@@ -521,6 +522,20 @@ router.put(
       });
 
       await ticket.save();
+      const populatedTicket =
+  await Ticket.findById(
+    ticket._id
+  ).populate(
+    "assignedAgent"
+  );
+
+const io =
+  req.app.get("io");
+
+io.emit(
+  "ticketUpdated",
+  populatedTicket
+);
 
       console.log(
         "TICKET SAVED"
@@ -816,6 +831,33 @@ router.get(
   }
 );
 router.get(
+  "/agent/:agentId",
+  authMiddleware,
+  async (req, res) => {
+    try {
+
+      const tickets =
+        await Ticket.find({
+          assignedAgent:
+            req.params.agentId
+        })
+        .populate("assignedAgent")
+        .sort({
+          createdAt: -1
+        });
+
+      res.json(tickets);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: error.message
+      });
+
+    }
+  }
+);
+router.get(
   "/:id/messages",
   authMiddleware,
   async (req, res) => {
@@ -893,6 +935,7 @@ router.post(
     }
   }
 );
+
 router.post(
   "/upload-profile",
   authMiddleware,
