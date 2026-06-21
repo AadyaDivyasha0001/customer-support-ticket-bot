@@ -844,13 +844,15 @@ router.get(
     });
 
     console.log("AGENT FOUND:", agent);
-
+        if (!agent) {
+        return res.json([]);
+      }
 
       const tickets =
-        await Ticket.find({
-          assignedAgent:
-            req.params.agentId
-        })
+  await Ticket.find({
+    assignedAgent:
+      agent._id
+  })
         .populate("assignedAgent")
         .sort({
           createdAt: -1
