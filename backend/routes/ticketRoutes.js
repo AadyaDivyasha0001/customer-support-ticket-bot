@@ -831,13 +831,13 @@ router.get(
   }
 );
 router.get(
-  "/agent/:agentId",
+  "/agent/email/:email",
   authMiddleware,
   async (req, res) => {
     try {
        console.log(
       "Requested Agent:",
-      req.params.agentId
+      req.params.email,
     );
 
 
