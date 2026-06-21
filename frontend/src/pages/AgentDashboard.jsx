@@ -141,7 +141,7 @@ useEffect(() => {
       localStorage.getItem("token");
 
     const res = await axios.get(
-      `${API}/tickets/agent/${agent.id}`,
+      `${API}/tickets/agent/${agent.agentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
