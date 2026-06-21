@@ -148,7 +148,7 @@ useEffect(() => {
         },
       }
     );
-
+     console.log("API RESPONSE:", res.data);
     setTickets(res.data);
 
   } catch (err) {
