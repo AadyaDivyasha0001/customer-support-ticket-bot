@@ -841,6 +841,7 @@ const CustomerDashboard = () => {
       boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
     }}
   >
+    {/*
     <h3>🎧 Assigned Agent</h3>
 
     <p>
@@ -862,9 +863,11 @@ const CustomerDashboard = () => {
       <strong>Department:</strong>{" "}
       {tickets[0]?.assignedAgent?.department || "-"}
     </p>
+    */}
   </div>
 </div>
             </div>
+            
 
       
 
