@@ -860,10 +860,7 @@ color:#64748b;
           <div className="agent-page-shell">
             {/* Top Bar Layout */}
             <div className="agent-topbar">
-              <div className="agent-search">
-                <FaSearch />
-               
-              </div>
+              
               <div className="agent-topbar-actions">
                 <div className="agent-profile-chip">
                   <div className="agent-profile-avatar"><FaUser /></div>
