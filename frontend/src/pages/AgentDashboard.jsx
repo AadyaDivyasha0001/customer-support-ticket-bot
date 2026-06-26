@@ -829,12 +829,7 @@ color:#64748b;
               active={activePage === "assigned"}
               onClick={() => setActivePage("assigned")}
             />
-            <SidebarItem
-              text="Open Tickets"
-              icon={<FaClock />}
-              active={activePage === "open"}
-              onClick={() => setActivePage("open")}
-            />
+            
             <SidebarItem
               text="Messages"
               icon={<FaComments />}
@@ -867,7 +862,7 @@ color:#64748b;
             <div className="agent-topbar">
               <div className="agent-search">
                 <FaSearch />
-                <input type="text" placeholder="Search parameters or ticket IDs..." />
+               
               </div>
               <div className="agent-topbar-actions">
                 <div className="agent-profile-chip">
