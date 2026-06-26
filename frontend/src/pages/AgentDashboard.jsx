@@ -1344,18 +1344,7 @@ Select a customer chat
             <strong>Email:</strong> {agent?.email}
           </p>
 
-          <p>
-            <strong>Phone:</strong>{agent?.phone || "-"}
-          </p>
-
-          <p>
-            <strong>Department:</strong>{agent?.department || "-"}
-          </p>
-
-          <p>
-            <strong>Employee ID:</strong> {agent?._id?.slice(-5) || "-"}
-          </p>
-
+          
           <p>
             <strong>Role:</strong> Support Executive
           </p>
