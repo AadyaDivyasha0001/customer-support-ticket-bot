@@ -831,8 +831,8 @@ const CustomerDashboard = () => {
   </div>
             
 
-  {/* Agent Details */}
-
+  {/* Agent Details 
+   
   <div
     style={{
       background: "#fff",
@@ -841,7 +841,7 @@ const CustomerDashboard = () => {
       boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
     }}
   >
-    {/*
+    
     <h3>🎧 Assigned Agent</h3>
 
     <p>
@@ -862,9 +862,10 @@ const CustomerDashboard = () => {
     <p>
       <strong>Department:</strong>{" "}
       {tickets[0]?.assignedAgent?.department || "-"}
-    </p>
-    */}
+    </p> 
+
   </div>
+  */}
 </div>
             </div>
             
@@ -876,12 +877,12 @@ const CustomerDashboard = () => {
   style={{
     marginTop: "40px",
   }}
->
+> 
  <h3
   style={{
     marginBottom: "20px",
     fontSize: "24px",
-  }}
+  }} 
 >
   📈 Ticket Tracking
 </h3>
