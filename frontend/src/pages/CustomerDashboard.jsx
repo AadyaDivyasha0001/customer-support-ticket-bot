@@ -507,10 +507,7 @@ const CustomerDashboard = () => {
 
             {/* Top Bar */}
             <div className="customer-topbar">
-              <div className="customer-search">
-                <FaSearch />
-                <input type="text" placeholder="Search tickets..." />
-              </div>
+              
               <div className="customer-topbar-actions">
                 <button className="customer-primary-btn" onClick={() => setActivePage("create")}>
                   <FaPlus /> Create Ticket
